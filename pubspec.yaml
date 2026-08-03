@@ -1,0 +1,27 @@
+name: esim
+description: "SpaceSIM — blerje pakosh eSIM për udhëtim."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.10.9
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # QR-i është i vetmi vend ku profili i eSIM-it kalon te telefoni: blerësi e
+  # skanon me pajisjen e dytë ose e hap si lidhje `LPA:`. Prandaj vizatohet
+  # vendas, jo si figurë e marrë nga rrjeti — një QR i shkarkuar do të thoshte
+  # se profili ka kaluar nëpër një server të tretë.
+  qr_flutter: ^4.1.0
+  shared_preferences: ^2.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/katalogu.json
