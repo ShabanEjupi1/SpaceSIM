@@ -30,20 +30,33 @@ class _FaqjaKryesoreState extends State<FaqjaKryesore> {
   int _skeda = 0;
   String _kerkim = '';
   late List<Porosia> _porosite = widget.ruajtja.porosite();
+  late List<ESimIm> _esimet = widget.ruajtja.esimet();
 
-  void _rifresko() => setState(() => _porosite = widget.ruajtja.porosite());
+  void _rifresko() => setState(() {
+        _porosite = widget.ruajtja.porosite();
+        _esimet = widget.ruajtja.esimet();
+      });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SpaceSIM'),
-        bottom: widget.furnizuesi.iVertete ? null : const _ShiritiProves(),
+        bottom: widget.furnizuesi.mundBlihet && !widget.furnizuesi.iVertete
+            ? const _Shiriti('PROVË — profilet nuk janë të vërteta dhe asgjë nuk paguhet')
+            : widget.furnizuesi.mundBlihet
+                ? null
+                : const _Shiriti('Shitja hapet së shpejti — çmimet janë orientuese'),
       ),
-      body: _skeda == 0 ? _blej(context) : FaqjaPorosive(
-        porosite: _porosite,
-        katalogu: widget.katalogu,
-      ),
+      body: _skeda == 0
+          ? _blej(context)
+          : FaqjaPorosive(
+              porosite: _porosite,
+              esimet: _esimet,
+              katalogu: widget.katalogu,
+              ruajtja: widget.ruajtja,
+              rifresko: _rifresko,
+            ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _skeda,
         onDestinationSelected: (i) {
@@ -119,8 +132,10 @@ class _FaqjaKryesoreState extends State<FaqjaKryesore> {
 
 /// Shiriti që nuk lejohet të hiqet derisa furnizuesi të jetë i vërtetë.
 /// Pa të, dikush mund të paguajë duke menduar se merr internet.
-class _ShiritiProves extends StatelessWidget implements PreferredSizeWidget {
-  const _ShiritiProves();
+class _Shiriti extends StatelessWidget implements PreferredSizeWidget {
+  const _Shiriti(this.teksti);
+
+  final String teksti;
 
   @override
   Size get preferredSize => const Size.fromHeight(30);
@@ -131,10 +146,10 @@ class _ShiritiProves extends StatelessWidget implements PreferredSizeWidget {
       width: double.infinity,
       color: Colors.amber.shade700,
       padding: const EdgeInsets.symmetric(vertical: 5),
-      child: const Text(
-        'PROVË — profilet nuk janë të vërteta dhe asgjë nuk paguhet',
+      child: Text(
+        teksti,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600),
+        style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600),
       ),
     );
   }

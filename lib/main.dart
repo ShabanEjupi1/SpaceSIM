@@ -4,6 +4,7 @@
 /// vijë çelësi i vërtetë, ndërrohet ky rresht i vetëm.
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 import 'furnizuesi/furnizuesi.dart';
@@ -18,7 +19,9 @@ Future<void> main() async {
   runApp(SpaceSim(
     katalogu: katalogu,
     ruajtja: ruajtja,
-    furnizuesi: FurnizuesISimuluar(),
+    // 🔑 Lëshimi NUK shet: një dyqan që merr para dhe jep profile të rreme nuk
+    // është provë, është mashtrim. I simuluari mbetet vetëm për zhvillim.
+    furnizuesi: kDebugMode ? FurnizuesISimuluar() : const FurnizuesIPaLidhur(),
   ));
 }
 

@@ -36,6 +36,12 @@ abstract class Furnizuesi {
   /// të dihet kush e ofron shërbimin.
   String get emri;
 
+  /// A mund të blihet fare tani. E NDARË nga [iVertete] me qëllim: një
+  /// furnizues i simuluar është i pavërtetë POR i blershëm (për zhvillim),
+  /// kurse mungesa e furnizuesit është e pavërtetë DHE e pablershme. Nëse do
+  /// të ishte një flamur i vetëm, njëri nga dy rastet do të gënjente.
+  bool get mundBlihet;
+
   /// A jep profile të vërteta. Ndërfaqja e përdor për të shfaqur shiritin
   /// «PROVË» — që askush të mos paguajë duke menduar se merr internet.
   bool get iVertete;
@@ -62,6 +68,9 @@ class FurnizuesISimuluar implements Furnizuesi {
   bool get iVertete => false;
 
   @override
+  bool get mundBlihet => true;
+
+  @override
   Future<Profili> blej(Paketa paketa, {required String porosiaId}) async {
     await Future<void>.delayed(vonesa);
 
@@ -83,6 +92,36 @@ class FurnizuesISimuluar implements Furnizuesi {
       kodiIAktivizimit: porosiaId.toUpperCase(),
     );
   }
+
+  @override
+  Future<double?> gigabajtTeMbetur(Profili profili) async => null;
+}
+
+/// Gjendja e vërtetë e sotme: **nuk ka furnizues**.
+///
+/// 🔑 Ky është zbatimi që përdoret te lëshimi, jo ai i simuluari. Arsyeja është
+/// e drejtpërdrejtë: një dyqan që merr para dhe jep profile të rreme nuk është
+/// «provë», është mashtrim — dhe Play-i e trajton pikërisht ashtu. Me këtë,
+/// aplikacioni thotë hapur se shitja s'ka nisur, kurse gjithçka tjetër (katalogu,
+/// pajtueshmëria, udhëzimet, eSIM-et e tua) punon plotësisht.
+class FurnizuesIPaLidhur implements Furnizuesi {
+  const FurnizuesIPaLidhur();
+
+  @override
+  String get emri => 'Ende pa furnizues';
+
+  @override
+  bool get mundBlihet => false;
+
+  @override
+  bool get iVertete => false;
+
+  @override
+  Future<Profili> blej(Paketa paketa, {required String porosiaId}) async =>
+      throw const GabimFurnizuesi(
+        'Shitja ende nuk ka nisur. Çmimet janë orientuese.',
+        rikthyeshem: false,
+      );
 
   @override
   Future<double?> gigabajtTeMbetur(Profili profili) async => null;

@@ -95,6 +95,52 @@ void main() {
     });
   });
 
+  group('Furnizuesi i palidhur', () {
+    test('nuk shet, dhe e thotë pa u rikthyer', () async {
+      // Ky është furnizuesi i LËSHIMIT. Nëse ndonjëherë `mundBlihet` bëhet true
+      // pa një furnizues të vërtetë, aplikacioni merr para pa dhënë asgjë.
+      const f = FurnizuesIPaLidhur();
+      expect(f.mundBlihet, isFalse);
+      expect(f.iVertete, isFalse);
+      const p = Paketa(
+          id: 'x', kodiIShtetit: 'XK', gigabajt: 1, dite: 7, centa: 100, rrjetet: []);
+      await expectLater(
+        f.blej(p, porosiaId: 'a'),
+        throwsA(isA<GabimFurnizuesi>()
+            .having((e) => e.rikthyeshem, 'rikthyeshem', isFalse)),
+      );
+    });
+  });
+
+  group('ESimIm', () {
+    test('një LPA pa «LPA:» refuzohet para se të ruhet', () {
+      // Pa këtë, vargu bëhet një QR që telefoni e skanon dhe e refuzon, dhe
+      // blerësi mendon se profili është i prishur — jo se e ngjiti gabim.
+      expect(ESimIm.gabimiILpas(r'1$rsp.x$KOD'), isNotNull);
+      expect(ESimIm.gabimiILpas(''), isNotNull);
+    });
+
+    test('një LPA pa server refuzohet', () {
+      expect(ESimIm.gabimiILpas('LPA:1'), isNotNull);
+    });
+
+    test('një LPA e plotë pranohet dhe kalon nëpër JSON', () {
+      expect(ESimIm.gabimiILpas(r'LPA:1$rsp.example.com$ABCD'), isNull);
+      final e = ESimIm(
+        id: 'im1',
+        emri: 'Gjermani',
+        lpa: r'LPA:1$rsp.example.com$ABCD',
+        kur: DateTime.utc(2026, 8, 3),
+        shenim: '5 GB',
+        skadon: DateTime.utc(2026, 9, 1),
+      );
+      final kthyer = ESimIm.ngaJson(e.teJson());
+      expect(kthyer.emri, 'Gjermani');
+      expect(kthyer.shenim, '5 GB');
+      expect(kthyer.skadon, DateTime.utc(2026, 9, 1));
+    });
+  });
+
   group('Porosia', () {
     test('kalon e plotë nëpër JSON, bashkë me profilin', () {
       final p = Porosia(

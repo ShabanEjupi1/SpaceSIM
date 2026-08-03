@@ -1,0 +1,139 @@
+name: Ndërto, testo dhe ngarko
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.38.10'
+
+jobs:
+  # ── Testet vijnë të parat dhe gjithçka tjetër varet prej tyre ──────────────
+  #
+  # Testet mbrojnë një kusht që nuk duket nga një ndërtim i suksesshëm:
+  # `FurnizuesIPaLidhur.mundBlihet` duhet të MBETET `false`. Nëse bëhet `true`
+  # pa një furnizues të vërtetë, aplikacioni merr para pa dhënë asgjë — dhe
+  # asnjë kompilim nuk e kap atë.
+  test:
+    name: Testet
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  # ── Android ───────────────────────────────────────────────────────────────
+  #
+  # 🚨 Android NUK ndërtohet dot në Ampere: Google nuk ka `aapt2`/`d8` për
+  # linux-aarch64. Prandaj burimi rri te Gitea dhe kjo pasqyrë te GitHub-i
+  # ekziston vetëm për CI-në.
+  android:
+    name: Android (AAB + APK)
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Vendos çelësin e nënshkrimit
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "::warning::Pa ANDROID_KEYSTORE_BASE64 — ndërtim me çelësin e debug-ut."
+            exit 0
+          fi
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > app/upload.jks
+          cat > key.properties <<EOF
+          storeFile=$(pwd)/app/upload.jks
+          storePassword=$ANDROID_STORE_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          keyPassword=$ANDROID_KEY_PASSWORD
+          EOF
+          # 🚨 `secrets` NUK lexohet te `if` i një hapi. Kushti duhet të kalojë
+          # përmes $GITHUB_ENV, ndryshe kontrolli më poshtë del gjithmonë false
+          # dhe kapërcehet në heshtje — pra rrjeta që duhet të kapë një AAB të
+          # nënshkruar me debug nuk ekziston fare.
+          echo "SIGNED=true" >> "$GITHUB_ENV"
+
+      - run: flutter pub get
+      - run: flutter build appbundle --release
+      - run: flutter build apk --release
+
+      - name: Kontrollo se AAB-ja NUK është nënshkruar me çelësin e debug-ut
+        if: env.SIGNED == 'true'
+        run: |
+          # Një AAB i nënshkruar me debug ngarkohet, duket i rregullt dhe
+          # refuzohet vetëm nga Play Console — pasi ke pritur ndërtimin.
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          if keytool -printcert -jarfile "$AAB" | grep -q 'CN=Android Debug'; then
+            echo "::error::AAB-ja u nënshkrua me çelësin e DEBUG-ut."
+            exit 1
+          fi
+          keytool -printcert -jarfile "$AAB" | head -20
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
+  # ── Play ──────────────────────────────────────────────────────────────────
+  #
+  # 🚨 Gjurma është `alpha` (= **Closed testing**), jo `internal`. Gjurma e
+  # brendshme është e vetmja që Google-i nuk e shqyrton: ajo NUK e nxjerr
+  # aplikacionin nga «Draft» dhe NUK numërohet për rregullin «12 testues × 14
+  # ditë» që kërkohet nga një llogari personale para prodhimit.
+  play:
+    name: Play (testimi i mbyllur)
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: android
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: android
+          path: dist
+
+      - name: Ngarko te Play
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::warning::Pa PLAY_SERVICE_ACCOUNT_JSON — ngarkimi te Play u kapërcye."
+            exit 0
+          fi
+          printf '%s' "$PLAY_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/play.json"
+          node store/tools/play.mjs "$RUNNER_TEMP/play.json" ngarko \
+            tech.spacecode.esim \
+            dist/bundle/release/app-release.aab \
+            alpha \
+            store/shenimet.json
+          rm -f "$RUNNER_TEMP/play.json"

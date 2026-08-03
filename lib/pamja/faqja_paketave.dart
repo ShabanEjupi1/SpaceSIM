@@ -45,10 +45,23 @@ class _FaqjaPaketaveState extends State<FaqjaPaketave> {
               child: ListTile(
                 title: Text('${p.sasia} · ${p.dite} ditë'),
                 subtitle: Text(p.rrjetet.join(' · ')),
-                trailing: FilledButton(
-                  onPressed: _duke ? null : () => _blej(p),
-                  child: Text(p.cmimi),
-                ),
+                trailing: widget.furnizuesi.mundBlihet
+                    ? FilledButton(
+                        onPressed: _duke ? null : () => _blej(p),
+                        child: Text(p.cmimi),
+                      )
+                    // Pa furnizues çmimi tregohet, por butoni jo: një buton
+                    // blerjeje që nuk blen dot është pikërisht ajo që Play-i e
+                    // quan «funksion i prishur».
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(p.cmimi,
+                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                          const Text('orientues', style: TextStyle(fontSize: 11)),
+                        ],
+                      ),
               ),
             ),
           if (_duke) const Padding(

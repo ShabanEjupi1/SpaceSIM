@@ -1,4 +1,4 @@
-/// Profili i blerë: QR-i dhe udhëzimet e instalimit.
+/// Kodi QR i një profili — qoftë i blerë, qoftë i ruajtur nga vetë blerësi.
 library;
 
 import 'package:flutter/material.dart';
@@ -9,19 +9,36 @@ import '../modele/modele.dart';
 import '../te_dhena/katalogu.dart';
 
 class FaqjaProfilit extends StatelessWidget {
-  const FaqjaProfilit({super.key, required this.porosia, required this.katalogu});
+  const FaqjaProfilit({super.key, required Porosia porosia, required Katalogu katalogu})
+      : _porosia = porosia,
+        _katalogu = katalogu,
+        _esim = null;
 
-  final Porosia porosia;
-  final Katalogu katalogu;
+  /// Një eSIM i ruajtur me dorë: nuk ka porosi, nuk ka shtet dhe nuk ka çmim —
+  /// vetëm emrin dhe kodin. Prandaj një konstruktor i dytë, jo fusha të
+  /// zbrazëta që secili ekran duhet t'i kontrollojë.
+  const FaqjaProfilit.iImi({super.key, required ESimIm esim})
+      : _esim = esim,
+        _porosia = null,
+        _katalogu = null;
+
+  final Porosia? _porosia;
+  final Katalogu? _katalogu;
+  final ESimIm? _esim;
+
+  String get _titulli => _esim != null
+      ? _esim.emri
+      : '${_katalogu!.shteti(_porosia!.kodiIShtetit).flamuri}  '
+          '${_katalogu.shteti(_porosia.kodiIShtetit).emri}';
+
+  String? get _lpa => _esim?.lpa ?? _porosia?.profili?.lpa;
 
   @override
   Widget build(BuildContext context) {
-    final profili = porosia.profili;
-    final shteti = katalogu.shteti(porosia.kodiIShtetit);
-
+    final lpa = _lpa;
     return Scaffold(
-      appBar: AppBar(title: Text('${shteti.flamuri}  ${shteti.emri}')),
-      body: profili == null
+      appBar: AppBar(title: Text(_titulli)),
+      body: lpa == null
           ? const Center(child: Padding(
               padding: EdgeInsets.all(24),
               child: Text('Kjo porosi ende nuk ka profil.'),
@@ -36,7 +53,7 @@ class FaqjaProfilit extends StatelessWidget {
                     // errët nuk lexohet nga shumica e skanerëve.
                     color: Colors.white,
                     child: QrImageView(
-                      data: profili.lpa,
+                      data: lpa,
                       size: 240,
                       backgroundColor: Colors.white,
                       version: QrVersions.auto,
@@ -54,14 +71,14 @@ class FaqjaProfilit extends StatelessWidget {
                   'nga galeria — telefoni nuk e skanon dot ekranin e vet.',
                 ),
                 const SizedBox(height: 20),
-                _Rreshti('ICCID', profili.iccid),
-                _Rreshti('LPA', profili.lpa),
-                if (profili.kodiIAktivizimit != null)
-                  _Rreshti('Kodi', profili.kodiIAktivizimit!),
+                if (_esim?.shenim != null) _Rreshti('Shënim', _esim!.shenim!),
+                if (_porosia?.profili != null)
+                  _Rreshti('ICCID', _porosia!.profili!.iccid),
+                _Rreshti('LPA', lpa),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    await Clipboard.setData(ClipboardData(text: profili.lpa));
+                    await Clipboard.setData(ClipboardData(text: lpa));
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context)
                       ..clearSnackBars()

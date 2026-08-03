@@ -159,3 +159,64 @@ class Porosia {
         gabimi: j['gabimi'] as String?,
       );
 }
+
+/// Një eSIM që blerësi e ka nga diku tjetër dhe e mban këtu.
+///
+/// 🔑 Kjo është e vetmja gjë e dobishme që aplikacioni bën PA asnjë furnizues:
+/// QR-të e eSIM-eve vijnë si email ose si foto dhe humbin menjëherë, kurse
+/// telefoni nuk e skanon dot ekranin e vet. Këtu ruhen, rivizatohen si QR dhe
+/// mbahen bashkë me shënimin se ku vlejnë dhe kur skadojnë.
+class ESimIm {
+  const ESimIm({
+    required this.id,
+    required this.emri,
+    required this.lpa,
+    required this.kur,
+    this.shenim,
+    this.skadon,
+  });
+
+  final String id;
+  final String emri;
+  final String lpa;
+  final DateTime kur;
+  final String? shenim;
+  final DateTime? skadon;
+
+  Map<String, dynamic> teJson() => {
+        'id': id,
+        'emri': emri,
+        'lpa': lpa,
+        'kur': kur.toIso8601String(),
+        if (shenim != null) 'shenim': shenim,
+        if (skadon != null) 'skadon': skadon!.toIso8601String(),
+      };
+
+  factory ESimIm.ngaJson(Map<String, dynamic> j) => ESimIm(
+        id: j['id'] as String,
+        emri: j['emri'] as String,
+        lpa: j['lpa'] as String,
+        kur: DateTime.parse(j['kur'] as String),
+        shenim: j['shenim'] as String?,
+        skadon: j['skadon'] == null ? null : DateTime.parse(j['skadon'] as String),
+      );
+
+  /// Një LPA e vlefshme ka formën `LPA:1$<serveri>$<kodi>`; serveri është i
+  /// detyrueshëm, kodi jo (disa profile aktivizohen vetëm me serverin).
+  ///
+  /// 🚨 Kontrollohet PARA se të ruhet: një varg i gabuar bëhet një QR që
+  /// telefoni e skanon dhe e refuzon, dhe atëherë blerësi mendon se profili
+  /// është i prishur — jo se e ngjiti gabim.
+  static String? gabimiILpas(String tekst) {
+    final t = tekst.trim();
+    if (t.isEmpty) return 'Ngjit kodin LPA ose kodin e aktivizimit.';
+    if (!t.toUpperCase().startsWith('LPA:')) {
+      return 'Duhet të nisë me «LPA:» — kështu e njeh telefoni.';
+    }
+    final pjeset = t.split(r'$');
+    if (pjeset.length < 2 || pjeset[1].trim().isEmpty) {
+      return 'Mungon serveri. Forma është LPA:1\$serveri\$kodi';
+    }
+    return null;
+  }
+}

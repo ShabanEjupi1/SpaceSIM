@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Nënshkrimi i lëshimit — kurrë te git-i.
+android/key.properties
+**/*.jks

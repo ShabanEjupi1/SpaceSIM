@@ -19,6 +19,9 @@ class Ruajtja {
 
   final SharedPreferences _p;
 
+  /// E hapur që zgjerimi `EsimetEMia` ta përdorë; asnjë ekran nuk e prek.
+  SharedPreferences get prefs => _p;
+
   static Future<Ruajtja> hap() async => Ruajtja._(await SharedPreferences.getInstance());
 
   List<Porosia> porosite() {
@@ -48,6 +51,37 @@ class Ruajtja {
   Future<List<Porosia>> perditeso(Porosia p) async {
     final l = porosite().map((e) => e.id == p.id ? p : e).toList();
     await ruaj(l);
+    return l;
+  }
+}
+
+/// eSIM-et e vetë blerësit — çelës i ndarë nga porositë, sepse jetët e tyre
+/// nuk kanë lidhje: një porosi e dështuar nuk guxon ta prekë një profil që
+/// blerësi e ka ruajtur me dorë.
+extension EsimetEMia on Ruajtja {
+  static const celesi = 'esimet.v1';
+
+  List<ESimIm> esimet() {
+    final teksti = prefs.getString(celesi);
+    if (teksti == null || teksti.isEmpty) return const [];
+    try {
+      return (jsonDecode(teksti) as List)
+          .map((e) => ESimIm.ngaJson((e as Map).cast<String, dynamic>()))
+          .toList();
+    } on FormatException {
+      return const [];
+    }
+  }
+
+  Future<List<ESimIm>> shtoEsim(ESimIm e) async {
+    final l = [e, ...esimet()];
+    await prefs.setString(celesi, jsonEncode([for (final x in l) x.teJson()]));
+    return l;
+  }
+
+  Future<List<ESimIm>> fshiEsim(String id) async {
+    final l = esimet().where((e) => e.id != id).toList();
+    await prefs.setString(celesi, jsonEncode([for (final x in l) x.teJson()]));
     return l;
   }
 }
