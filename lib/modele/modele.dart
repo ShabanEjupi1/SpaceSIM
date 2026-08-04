@@ -1,4 +1,4 @@
-/// Modelet e SpaceSIM-it.
+/// Modelet e eSIM Space-it.
 ///
 /// Të gjitha janë të pandryshueshme dhe dinë ta lexojnë veten nga JSON-i, sepse
 /// i njëjti format vjen sot nga `assets/katalogu.json` dhe nesër nga API-ja e

@@ -1,11 +1,11 @@
 {
-    "name": "esim",
-    "short_name": "esim",
+    "name": "eSIM Space",
+    "short_name": "eSIM Space",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1F6F5C",
+    "theme_color": "#1F6F5C",
+    "description": "Mbaj eSIM-et e tua në një vend: kodi QR gjithnjë me ty, edhe pa internet, dhe kontrolli nëse telefoni e mban eSIM-in.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

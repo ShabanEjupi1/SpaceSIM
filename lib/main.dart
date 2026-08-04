@@ -1,4 +1,4 @@
-/// SpaceSIM — blerje pakosh eSIM për udhëtim.
+/// eSIM Space — mbaj eSIM-et e tua në një vend.
 ///
 /// 🔑 Furnizuesi zgjidhet KËTU dhe askund tjetër. Sot është i simuluar; kur të
 /// vijë çelësi i vërtetë, ndërrohet ky rresht i vetëm.
@@ -42,7 +42,7 @@ class SpaceSim extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SpaceSIM',
+      title: 'eSIM Space',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: seed),

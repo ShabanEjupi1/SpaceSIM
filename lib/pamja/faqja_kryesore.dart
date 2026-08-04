@@ -41,7 +41,7 @@ class _FaqjaKryesoreState extends State<FaqjaKryesore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SpaceSIM'),
+        title: const Text('eSIM Space'),
         bottom: widget.furnizuesi.mundBlihet && !widget.furnizuesi.iVertete
             ? const _Shiriti('PROVË — profilet nuk janë të vërteta dhe asgjë nuk paguhet')
             : widget.furnizuesi.mundBlihet
