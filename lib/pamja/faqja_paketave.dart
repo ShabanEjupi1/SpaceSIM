@@ -34,7 +34,7 @@ class _FaqjaPaketaveState extends State<FaqjaPaketave> {
   Widget build(BuildContext context) {
     final paketat = widget.katalogu.perShtetin(widget.shteti.kodi);
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.shteti.flamuri}  ${widget.shteti.emri}')),
+      appBar: AppBar(title: Text(widget.shteti.emri)),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [

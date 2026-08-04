@@ -10,23 +10,24 @@ class Shteti {
   const Shteti({
     required this.kodi,
     required this.emri,
-    required this.flamuri,
     required this.rajoni,
   });
 
   /// ISO 3166-1 alpha-2, me shkronja të mëdha ('XK' për Kosovën).
+  ///
+  /// 🕌 Ky kod ËSHTË shenja e shtetit te ndërfaqja — nuk ka fushë `flamuri`.
+  /// Emoji-t e flamujve u hoqën më 2026-08-04: dy prej tyre (🇦🇱, 🇲🇪) vizatohen
+  /// nga fonti i pajisjes si shqiponja, pra qenie të gjalla, dhe një glif
+  /// Unicode nuk ndreqet dot me kod. Shih [[workflow-pamja-pa-qenie-te-gjalla]].
+  /// Përfitim i dytë: flamujt rajonalë nuk ekzistojnë fare te Windows-i dhe te
+  /// disa Android-e — atje dilnin dy shkronja të zhveshura ose katrorë bosh.
   final String kodi;
   final String emri;
-
-  /// Flamuri si dy shkronja rajonale Unicode — pa asnjë figurë dhe pa asnjë
-  /// skedar imazhi; e vizaton vetë fonti i sistemit.
-  final String flamuri;
   final String rajoni;
 
   factory Shteti.ngaJson(Map<String, dynamic> j) => Shteti(
         kodi: j['kodi'] as String,
         emri: j['emri'] as String,
-        flamuri: j['flamuri'] as String,
         rajoni: j['rajoni'] as String,
       );
 }

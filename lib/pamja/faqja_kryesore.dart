@@ -10,6 +10,7 @@ import '../te_dhena/katalogu.dart';
 import '../te_dhena/ruajtja.dart';
 import 'faqja_paketave.dart';
 import 'faqja_porosive.dart';
+import 'shenja_e_shtetit.dart';
 
 class FaqjaKryesore extends StatefulWidget {
   const FaqjaKryesore({
@@ -115,7 +116,7 @@ class _FaqjaKryesoreState extends State<FaqjaKryesore> {
                       ),
                       for (final s in hyrja.value)
                         ListTile(
-                          leading: Text(s.flamuri, style: const TextStyle(fontSize: 26)),
+                          leading: ShenjaEShtetit(s.kodi),
                           title: Text(s.emri),
                           subtitle: Text(_nga(s.kodi)),
                           trailing: const Icon(Icons.chevron_right),

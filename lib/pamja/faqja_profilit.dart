@@ -28,8 +28,7 @@ class FaqjaProfilit extends StatelessWidget {
 
   String get _titulli => _esim != null
       ? _esim.emri
-      : '${_katalogu!.shteti(_porosia!.kodiIShtetit).flamuri}  '
-          '${_katalogu.shteti(_porosia.kodiIShtetit).emri}';
+      : _katalogu!.shteti(_porosia!.kodiIShtetit).emri;
 
   String? get _lpa => _esim?.lpa ?? _porosia?.profili?.lpa;
 
@@ -64,10 +63,13 @@ class FaqjaProfilit extends StatelessWidget {
                 const Text('Si instalohet',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 const SizedBox(height: 8),
+                // Pa emoji: te Windows-i dhe te Play Games PC ato dalin katrorë
+                // bosh, dhe një udhëzim instalimi është pikërisht vendi ku një
+                // katror bosh e bën lexuesin të dyshojë se gaboi diçka.
                 const Text(
-                  '📱 Android: Cilësimet → Rrjeti → SIM → Shto eSIM → Skano kodin.\n'
-                  '🍎 iPhone: Cilësimet → Celulari → Shto eSIM → Përdor kodin QR.\n\n'
-                  '🚨 Skanoje me një pajisje TJETËR, ose ruaje figurën dhe zgjidhe '
+                  'Android: Cilësimet → Rrjeti → SIM → Shto eSIM → Skano kodin.\n'
+                  'iPhone: Cilësimet → Celulari → Shto eSIM → Përdor kodin QR.\n\n'
+                  'Skanoje me një pajisje TJETËR, ose ruaje figurën dhe zgjidhe '
                   'nga galeria — telefoni nuk e skanon dot ekranin e vet.',
                 ),
                 const SizedBox(height: 20),

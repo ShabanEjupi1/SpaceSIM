@@ -12,6 +12,7 @@ import '../te_dhena/katalogu.dart';
 import '../te_dhena/ruajtja.dart';
 import 'faqja_profilit.dart';
 import 'faqja_shto.dart';
+import 'shenja_e_shtetit.dart';
 
 class FaqjaPorosive extends StatelessWidget {
   const FaqjaPorosive({
@@ -109,7 +110,7 @@ class FaqjaPorosive extends StatelessWidget {
     final shteti = katalogu.shteti(p.kodiIShtetit);
     final paketa = katalogu.paketa(p.paketaId);
     return ListTile(
-      leading: Text(shteti.flamuri, style: const TextStyle(fontSize: 26)),
+      leading: ShenjaEShtetit(shteti.kodi),
       title: Text('${shteti.emri} · ${paketa.sasia}'),
       subtitle: Text(_pershkrimi(p)),
       trailing: p.gjendja == GjendjaEPorosise.dhene

@@ -10,8 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 const _json = '''
 {
   "shtetet": [
-    {"kodi": "XK", "emri": "Kosovë", "flamuri": "🇽🇰", "rajoni": "Ballkan"},
-    {"kodi": "DE", "emri": "Gjermani", "flamuri": "🇩🇪", "rajoni": "Evropë"}
+    {"kodi": "XK", "emri": "Kosovë", "rajoni": "Ballkan"},
+    {"kodi": "DE", "emri": "Gjermani", "rajoni": "Evropë"}
   ],
   "paketat": [
     {"id": "xk-3", "shteti": "XK", "gb": 3, "dite": 15, "centa": 890, "rrjetet": ["Vala"]},
@@ -36,7 +36,7 @@ void main() {
       // Pa këtë kontroll, paketa do të zhdukej pa gabim dhe ekrani do të
       // dukej thjesht «pa oferta».
       const iKeq = '''
-      {"shtetet": [{"kodi":"XK","emri":"Kosovë","flamuri":"🇽🇰","rajoni":"Ballkan"}],
+      {"shtetet": [{"kodi":"XK","emri":"Kosovë","rajoni":"Ballkan"}],
        "paketat": [{"id":"zz-1","shteti":"ZZ","gb":1,"dite":7,"centa":100,"rrjetet":[]}]}
       ''';
       expect(() => Katalogu.ngaTeksti(iKeq), throwsFormatException);
@@ -213,6 +213,34 @@ void main() {
         'kur': DateTime.utc(2026).toIso8601String(), 'gjendja': 'diçka-e-re',
       };
       expect(Porosia.ngaJson(j).gjendja, GjendjaEPorosise.nisur);
+    });
+  });
+
+  group('Pamja', () {
+    test('asnjë emoji te katalogu dhe te ekranet', () {
+      // 🕌 Katalogu mbante emoji flamujsh derisa u hoqën më 2026-08-04: dy prej
+      // tyre (Shqipëria, Mali i Zi) i vizaton fonti i pajisjes si shqiponja, pra
+      // qenie të gjalla, dhe një glif Unicode nuk ndreqet dot me kod. Ky test
+      // rri këtu sepse rikthimi do të ishte një rresht i vetëm te një JSON që
+      // askush nuk e rilexon. Shih `lib/pamja/shenja_e_shtetit.dart`.
+      final skedaret = [
+        File('assets/katalogu.json'),
+        ...Directory('lib').listSync(recursive: true).whereType<File>()
+            .where((f) => f.path.endsWith('.dart')),
+      ];
+      // Emoji, simbole të ndryshme dhe treguesit rajonalë të flamujve.
+      final emoji = RegExp(r'[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]', unicode: true);
+      // 🔑 Komentet hiqen para kontrollit: shënuesit 🚨/🔑/🕌 janë stili i vetë
+      // depos dhe nuk dalin kurrë në ekran. Nëse kontrollohej krejt skedari,
+      // testi do të binte gjithnjë dhe do të hiqej brenda javës.
+      final koment = RegExp(r'^\s*//.*$|//.*$', multiLine: true);
+      for (final f in skedaret) {
+        final teksti = f.path.endsWith('.dart')
+            ? f.readAsStringSync().replaceAll(koment, '')
+            : f.readAsStringSync();
+        final gjetur = emoji.allMatches(teksti).map((m) => m[0]).toSet();
+        expect(gjetur, isEmpty, reason: '${f.path} mban ${gjetur.join()}');
+      }
     });
   });
 }

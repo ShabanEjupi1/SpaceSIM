@@ -9,9 +9,9 @@
     "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
   ],
   "gjendja": "draft",
-  "emri": "0.1.0 (1) — lëshimi i parë",
+  "emri": "0.3.0 (3) — ikona dhe kodet e shteteve",
   "shenimet": {
-    "sq": "Lëshimi i parë.\n\n• Ruaj eSIM-et që ke nga kudo: ngjit kodin LPA një herë dhe kodi QR është gjithnjë me ty, edhe pa internet.\n• Kontrollo nëse telefoni yt e mban eSIM-in, para se të blesh diku.\n• Udhëzime instalimi për Android dhe iPhone.\n• Çmime orientuese për 14 shtete. Shitja hapet së shpejti.",
-    "en-US": "First release.\n\n• Keep the eSIMs you already have: paste the LPA code once and the QR is always with you, even offline.\n• Check whether your phone supports eSIM before you buy anywhere.\n• Install instructions for Android and iPhone.\n• Indicative prices for 14 countries. Sales open soon."
+    "sq": "• Ikonë e re: një çip eSIM-i, e vizatuar posaçërisht. Deri tani rrinte ikona e parazgjedhur.\n• Shtetet tregohen me kodin me dy shkronja (XK, AL, DE) në vend të emoji-ve të flamujve — ata nuk ekzistojnë fare te disa pajisje dhe atje dilnin katrorë bosh.\n• Udhëzimet e instalimit u pastruan nga shenjat që disa telefona nuk i vizatojnë dot.\n\nGjithçka tjetër si më parë: eSIM-et e tua, kodi QR pa internet, kontrolli i pajisjes dhe çmimet orientuese për 14 shtete.",
+    "en-US": "• A new icon: an eSIM chip, drawn for this app. Until now it shipped the default one.\n• Countries now show their two-letter code (XK, AL, DE) instead of flag emoji, which do not exist at all on some devices and showed up as empty boxes there.\n• The install instructions no longer use symbols some phones cannot draw.\n\nEverything else is unchanged: your eSIMs, the offline QR, the device check and indicative prices for 14 countries."
   }
 }

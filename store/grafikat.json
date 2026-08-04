@@ -1,0 +1,23 @@
+[
+  { "file": "play-ikona-512.png",        "html": "ikona.html",   "w": 512,  "h": 512 },
+  { "file": "play-grafika-1024x500.png", "html": "grafika.html", "w": 1024, "h": 500 },
+
+  { "file": "pwa-icon-192.png",          "html": "ikona.html", "w": 192, "h": 192 },
+  { "file": "pwa-icon-512.png",          "html": "ikona.html", "w": 512, "h": 512 },
+  { "file": "pwa-icon-maskable-192.png", "html": "ikona.html?fg=1&maskable=1", "w": 192, "h": 192 },
+  { "file": "pwa-icon-maskable-512.png", "html": "ikona.html?fg=1&maskable=1", "w": 512, "h": 512 },
+  { "file": "pwa-favicon-32.png",        "html": "ikona.html", "w": 32,  "h": 32 },
+  { "file": "pwa-apple-touch-180.png",   "html": "ikona.html", "w": 180, "h": 180 },
+
+  { "file": "ic_launcher-mdpi-48.png",    "html": "ikona.html", "w": 48,  "h": 48 },
+  { "file": "ic_launcher-hdpi-72.png",    "html": "ikona.html", "w": 72,  "h": 72 },
+  { "file": "ic_launcher-xhdpi-96.png",   "html": "ikona.html", "w": 96,  "h": 96 },
+  { "file": "ic_launcher-xxhdpi-144.png", "html": "ikona.html", "w": 144, "h": 144 },
+  { "file": "ic_launcher-xxxhdpi-192.png","html": "ikona.html", "w": 192, "h": 192 },
+
+  { "file": "ic_launcher_foreground-mdpi-108.png",    "html": "ikona.html?fg=1", "w": 108, "h": 108, "transparent": true },
+  { "file": "ic_launcher_foreground-hdpi-162.png",    "html": "ikona.html?fg=1", "w": 162, "h": 162, "transparent": true },
+  { "file": "ic_launcher_foreground-xhdpi-216.png",   "html": "ikona.html?fg=1", "w": 216, "h": 216, "transparent": true },
+  { "file": "ic_launcher_foreground-xxhdpi-324.png",  "html": "ikona.html?fg=1", "w": 324, "h": 324, "transparent": true },
+  { "file": "ic_launcher_foreground-xxxhdpi-432.png", "html": "ikona.html?fg=1", "w": 432, "h": 432, "transparent": true }
+]

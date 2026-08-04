@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sfondi i ikonës adaptive: e njëjta jeshile deti si te `store/ikona.html`,
+         që ikona te ekrani kryesor dhe aplikacioni të duken si i njëjti send.
+         Pa këtë skedar Android-i e vendos ikonën katrore brenda një rrethi të
+         bardhë dhe aplikacioni duket i pambaruar mes të tjerëve. -->
+    <color name="ic_launcher_background">#06201B</color>
+</resources>

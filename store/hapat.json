@@ -1,0 +1,18 @@
+[
+  { "__": "🚨 Koordinatat janë piksela CSS te një telefon i emuluar 360×640 @3× (= 1080×1920, saktë sa do Play): pikseli i imazhit ÷ 3. U matën nga një pamje e vërtetë më 2026-08-04. Nëse ndryshon shiriti i verdhë, lundrimi ose lartësia e rreshtave, duhen rimatur — një prekje që bie në boshllëk nuk jep asnjë gabim, thjesht të lë te i njëjti ekran dhe pamjet dalin të gjitha njësoj." },
+
+  { "___mbjellja": "«Të miat» dhe kodi QR janë BOSH derisa përdoruesi të ketë ruajtur një eSIM, dhe shkrimi i tij do të shtypej brenda një canvas-i. Mbillet drejt te ruajtja: `shared_preferences_web` shkruan te localStorage['flutter.<çelësi>'] me vlerën `json.encode(<vargu>)` — pra një varg JSON brenda një vargu JSON. LPA-të janë të pavlefshme me qëllim: janë pamje dyqani, jo profile.",
+    "js": "localStorage.setItem('flutter.esimet.v1', JSON.stringify(JSON.stringify([{id:'e1',emri:'Turqi — pushime',lpa:'LPA:1$rsp.example.net$SHEMBULL-5A1LM1P5',kur:'2026-07-28T09:00:00.000Z',shenim:'Blerë para nisjes',skadon:'2026-08-27T09:00:00.000Z'},{id:'e2',emri:'Gjermani — punë',lpa:'LPA:1$rsp.example.com$SHEMBULL-K27QJ49Z',kur:'2026-06-11T14:20:00.000Z'}])))",
+    "nav": true },
+
+  { "wait": 1500, "shot": "pamje-1-shtetet" },
+
+  { "tap": [150, 218], "wait": 1800, "shot": "pamje-2-paketat" },
+  { "tap": [22, 28],   "wait": 1400 },
+
+  { "tap": [270, 597], "wait": 1400, "shot": "pamje-3-te-miat" },
+  { "tap": [150, 190], "wait": 1800, "shot": "pamje-4-kodi-qr" },
+  { "tap": [22, 28],   "wait": 1400 },
+
+  { "tap": [270, 520], "wait": 1600, "shot": "pamje-5-shto" }
+]

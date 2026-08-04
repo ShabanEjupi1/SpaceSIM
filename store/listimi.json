@@ -19,6 +19,33 @@
     }
   },
 
+  "__figurat": "🔑 Shtigjet janë relative ndaj KËTIJ skedari, jo ndaj rrënjës së depos. Ikona dhe grafika dalin nga `store/ikona.html` e `store/grafika.html` me `node store/vizato.mjs`; pamjet merren nga vetë aplikacioni me `store/tools/pamje.mjs` + `store/hapat.json`. Asnjë figurë nuk vizatohet me dorë dhe asnjë pamje nuk është maket — Play-i kërkon pamje që tregojnë vërtet aplikacionin.",
+
+  "images": {
+    "sq": {
+      "icon": "ikona-gen/play-ikona-512.png",
+      "featureGraphic": "ikona-gen/play-grafika-1024x500.png",
+      "phoneScreenshots": [
+        "assets/pamje-1-shtetet.png",
+        "assets/pamje-2-paketat.png",
+        "assets/pamje-3-te-miat.png",
+        "assets/pamje-4-kodi-qr.png",
+        "assets/pamje-5-shto.png"
+      ]
+    },
+    "en-US": {
+      "icon": "ikona-gen/play-ikona-512.png",
+      "featureGraphic": "ikona-gen/play-grafika-1024x500.png",
+      "phoneScreenshots": [
+        "assets/pamje-1-shtetet.png",
+        "assets/pamje-2-paketat.png",
+        "assets/pamje-3-te-miat.png",
+        "assets/pamje-4-kodi-qr.png",
+        "assets/pamje-5-shto.png"
+      ]
+    }
+  },
+
   "details": {
     "contactEmail": "info@spacecode.tech",
     "contactWebsite": "https://esim.spacecode.tech",

@@ -1,7 +1,7 @@
 name: esim
 description: "eSIM Space — mbaj eSIM-et e tua në një vend."
 publish_to: 'none'
-version: 0.2.0+2
+version: 0.3.0+3
 
 environment:
   sdk: ^3.10.9

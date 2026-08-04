@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="sq">
+<meta charset="utf-8">
+<title>Ikona e eSIM Space</title>
+<!--
+  Ikona: një çip eSIM-i me tri harqe sinjali që dalin nga cepi i prerë.
+  Ngjyrat vijnë nga fara e temës së aplikacionit (`main.dart`: #1F6F5C) — jeshile
+  deti e errët për sfondin, minta për çipin dhe ari i kontakteve për vijat brenda.
+
+  🕌 Asnjë qenie e gjallë dhe asnjë kryq: çipi vizatohet me tri shirita
+  HORIZONTALË, jo me rrjetën e zakonshme të kontakteve, sepse ajo rrjetë lë një
+  kryq në hapësirën negative mes pllakave. Shih [[workflow-pamja-pa-qenie-te-gjalla]].
+
+  ?fg=1        → pa sfond (pjesa e përparme e ikonës adaptive të Android-it)
+  ?maskable=1  → me sfond, por figura brenda zonës së sigurt 66%
+-->
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; }
+  svg { display: block; width: 100vw; height: 100vh; }
+</style>
+
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fusha" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#12463A"/>
+      <stop offset="100%" stop-color="#06201B"/>
+    </linearGradient>
+  </defs>
+
+  <rect id="sfondi" width="512" height="512" fill="url(#fusha)"/>
+
+  <g id="figura" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- trupi i çipit: kënd i prerë lart-djathtas, aty ku nisin harqet -->
+    <path id="cipi" stroke="#34D6A8" stroke-width="18" fill="#0C2C25"/>
+
+    <!-- pllaka e kontakteve: një drejtkëndësh i artë i ndarë me DY vija
+         horizontale. Çipi i vërtetë ka edhe një vijë vertikale në mes, por ajo
+         bashkë me horizontalet lë një kryq në hapësirën negative — prandaj
+         mungon me qëllim. -->
+    <rect id="pllaka" x="172" y="222" width="148" height="132" rx="14"
+          fill="#F2C14E" stroke="none"/>
+    <g stroke="#0C2C25" stroke-width="12">
+      <path d="M172 266 L320 266"/>
+      <path d="M172 310 L320 310"/>
+    </g>
+
+    <!-- sinjali: tri harqe nga cepi i prerë -->
+    <g stroke="#7FE3C7" stroke-width="17">
+      <path id="h1" stroke-opacity="0.95"/>
+      <path id="h2" stroke-opacity="0.66"/>
+      <path id="h3" stroke-opacity="0.40"/>
+    </g>
+  </g>
+</svg>
+
+<script>
+  const X0 = 136, Y0 = 150, X1 = 356, Y1 = 400, R = 30, PRERJA = 54;
+
+  document.getElementById('cipi').setAttribute('d',
+    `M${X0 + R} ${Y0} L${X1 - PRERJA} ${Y0} L${X1} ${Y0 + PRERJA} ` +
+    `L${X1} ${Y1 - R} A${R} ${R} 0 0 1 ${X1 - R} ${Y1} ` +
+    `L${X0 + R} ${Y1} A${R} ${R} 0 0 1 ${X0} ${Y1 - R} ` +
+    `L${X0} ${Y0 + R} A${R} ${R} 0 0 1 ${X0 + R} ${Y0} Z`);
+
+  // Harqet nisin te vetë cepi i prerë, që sinjali të duket se del nga çipi.
+  const harku = (r) => {
+    const rad = k => (k * Math.PI) / 180;
+    const p = k => `${(X1 + r * Math.cos(rad(k))).toFixed(2)} ${(Y0 + r * Math.sin(rad(k))).toFixed(2)}`;
+    return `M${p(-2)} A${r} ${r} 0 0 0 ${p(-88)}`;
+  };
+  [['h1', 46], ['h2', 84], ['h3', 122]].forEach(([id, r]) =>
+    document.getElementById(id).setAttribute('d', harku(r)));
+
+  const q = new URLSearchParams(location.search);
+  if (q.has('fg')) {
+    if (!q.has('maskable')) document.getElementById('sfondi').remove();
+    const k = 0.66, d = (512 - 512 * k) / 2;
+    document.getElementById('figura')
+      .setAttribute('transform', `translate(${d} ${d}) scale(${k})`);
+  }
+</script>
+</html>
