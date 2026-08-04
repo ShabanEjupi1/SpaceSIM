@@ -255,6 +255,22 @@ if (cmd === 'kontrollo') {
     console.log(`listimi    ${l.language}: «${l.title}» (${(l.shortDescription ?? '').length}/${(l.fullDescription ?? '').length} shkronja)`);
   if (!(listings.listings ?? []).length) console.log('listimi    ASNJË — aplikacioni s\'del dot nga «Draft» pa të');
 
+  // 🚨 Figurat numërohen veç: tekstet mund të jenë ngjitur prej javësh dhe
+  // «Set up your store listing» të rrijë prapë e kuqe sepse mungon ikona ose
+  // pamjet — dhe kjo nuk duket askund te rreshtat më sipër. Ndodhi te eSIM-i
+  // më 04-08-2026. Play-i kërkon ikonë, grafikë dhe ≥2 pamje telefoni.
+  for (const l of listings.listings ?? []) {
+    const numri = async (lloji) => ((await call(
+      `${API}/applications/${pkg}/edits/${edit.id}/listings/${l.language}/${lloji}`)
+    ).images ?? []).length;
+    const [ikona, grafika, pamjet] =
+      await Promise.all(['icon', 'featureGraphic', 'phoneScreenshots'].map(numri));
+    const mungon = [!ikona && 'ikona', !grafika && 'grafika', pamjet < 2 && 'pamjet (<2)']
+      .filter(Boolean).join(', ');
+    console.log(`figurat    ${l.language}: ikona ${ikona} · grafika ${grafika} · pamje ${pamjet}` +
+      (mungon ? `  ⛔ mungon: ${mungon}` : '  ✅'));
+  }
+
   const tracks = await call(`${API}/applications/${pkg}/edits/${edit.id}/tracks`);
   for (const t of tracks.tracks ?? []) {
     const rel = (t.releases ?? []).map(r => `${r.status} ${(r.versionCodes ?? []).join(',') || '—'}`).join(' | ') || 'bosh';
@@ -262,6 +278,30 @@ if (cmd === 'kontrollo') {
   }
 
   await call(`${API}/applications/${pkg}/edits/${edit.id}`, { method: 'DELETE' });
+
+} else if (cmd === 'zbraze') {
+  // Zbraz një gjurmë: `zbraze <paketa> <gjurma>`.
+  //
+  // 🚨 Kjo ekziston për një gjendje të vetme, që te Console-i duket si gabim
+  // i pashpjegueshëm: një lëshim i krijuar me dorë PA asnjë AAB. «Review
+  // release» atëherë tregon dy gabime njëherësh —
+  //   «This release does not add or remove any app bundles» (shkaku), dhe
+  //   «doesn't allow any existing users to upgrade» (pasoja) —
+  // dhe Console-i NUK jep asnjë buton «fshije këtë lëshim». E vetmja rrugë
+  // është t'i dërgosh gjurmës një listë lëshimesh BOSH, që bëhet vetëm nga
+  // API-ja. Pas kësaj gjurma kthehet e pastër dhe gabimet zhduken.
+  const track = process.argv[5];
+  if (!track) { console.error('jep gjurmën: zbraze <paketa> <gjurma>'); process.exit(2); }
+
+  const edit = await call(`${API}/applications/${pkg}/edits`, { method: 'POST', json: {} });
+  const para = await call(`${API}/applications/${pkg}/edits/${edit.id}/tracks/${track}`);
+  console.log(`para: ${(para.releases ?? []).map(r =>
+    `${r.status} ${(r.versionCodes ?? []).join(',') || '—'}`).join(' | ') || 'bosh'}`);
+
+  await call(`${API}/applications/${pkg}/edits/${edit.id}/tracks/${track}`,
+    { method: 'PUT', json: { track, releases: [] } });
+  await call(`${API}/applications/${pkg}/edits/${edit.id}:commit`, { method: 'POST' });
+  console.log(`✓ gjurma ${track} u zbraz për ${pkg}`);
 
 } else {
   console.error(`urdhër i panjohur: ${cmd}`);
