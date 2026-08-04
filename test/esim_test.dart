@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:esim/app/ads.dart';
 import 'package:esim/furnizuesi/furnizuesi.dart';
 import 'package:esim/modele/modele.dart';
 import 'package:esim/te_dhena/katalogu.dart';
@@ -138,6 +140,52 @@ void main() {
       expect(kthyer.emri, 'Gjermani');
       expect(kthyer.shenim, '5 GB');
       expect(kthyer.skadon, DateTime.utc(2026, 9, 1));
+    });
+  });
+
+  group('Reklamat', () {
+    test('jashtë lëshimit përdoren VETËM njësitë e provës së Google-it', () {
+      // 🚨 Rregulli që mbron llogarinë: një klikim i vetëm mbi njësinë e vërtetë
+      // nga vetë zhvilluesi është «trafik i pavlefshëm» dhe llogaria e AdMob-it
+      // mbyllet pa paralajmërim. Testet dhe `flutter run` janë të dyja debug,
+      // ndaj kjo është pikërisht gjendja që prek zhvilluesi çdo ditë.
+      expect(Ads.bannerUnit, startsWith('ca-app-pub-3940256099942544/'));
+      expect(Ads.interstitialUnit, startsWith('ca-app-pub-3940256099942544/'));
+    });
+
+    test('pa nisje, asnjë rrugë reklame nuk bën asgjë', () async {
+      // `start()` nuk thirret kurrë te testet (as te web-i, as pa rrjet).
+      // Prandaj gjithçka duhet të mbetet e heshtur: banderola zë zero hapësirë
+      // dhe interstitial-i kthehet menjëherë, pa prekur SDK-në që s'ekziston.
+      expect(Ads.ready, isFalse);
+      await Ads.maybeShowAfterQr();
+    });
+
+    test('pauza mes dy interstitialeve nuk zbret nën 4 minuta', () {
+      expect(Ads.pauzaMesInterstitialeve, greaterThanOrEqualTo(const Duration(minutes: 4)));
+    });
+
+    test('ekrani i kodit QR nuk di fare se ekzistojnë reklama', () {
+      // 🚨🚨 Rregulli më i rëndësishëm i të gjithëve, dhe i vetmi që një
+      // rishikim me sy e humb: ekranin e QR-it e lexon një pajisje e DYTË që po
+      // skanon. Çfarëdo reklame atje bie brenda kuadratit që kamera lexon dhe
+      // skanimi dështon pa e ditur askush pse.
+      // Kontrolli bëhet mbi BURIMIN, jo mbi pamjen: një test widget-i do të
+      // kapte vetëm banderolën, kurse një interstitial i hapur nga ai ekran do
+      // t'i shpëtonte. Këtu s'i shpëton asnjëra.
+      final burimi = File('lib/pamja/faqja_profilit.dart').readAsStringSync();
+      expect(burimi.contains('ads.dart'), isFalse,
+          reason: 'faqja_profilit.dart nuk guxon të importojë reklamat');
+      expect(burimi.contains('Ads.'), isFalse);
+      expect(burimi.contains('BannerSlot'), isFalse);
+    });
+
+    test('formulari «Shto eSIM-in tënd» po ashtu nuk mban reklama', () {
+      // Një formular i ndërprerë nga një reklamë e plotë humb atë që është
+      // shkruar; dhe LPA-ja ngjitet nga kujtesa e fragmenteve, të cilën një
+      // reklamë mund ta zëvendësojë.
+      final burimi = File('lib/pamja/faqja_shto.dart').readAsStringSync();
+      expect(burimi.contains('ads.dart'), isFalse);
     });
   });
 

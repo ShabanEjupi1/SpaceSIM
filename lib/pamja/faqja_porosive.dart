@@ -6,6 +6,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../app/ads.dart';
 import '../modele/modele.dart';
 import '../te_dhena/katalogu.dart';
 import '../te_dhena/ruajtja.dart';
@@ -66,9 +67,11 @@ class FaqjaPorosive extends StatelessWidget {
                         title: Text(e.emri),
                         subtitle: Text(_nenshkrimi(e)),
                         trailing: const Icon(Icons.qr_code_2),
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => FaqjaProfilit.iImi(esim: e),
-                        )),
+                        onTap: () => Navigator.of(context)
+                            .push(MaterialPageRoute(
+                              builder: (_) => FaqjaProfilit.iImi(esim: e),
+                            ))
+                            .then((_) => Ads.maybeShowAfterQr()),
                       ),
                     ),
                 ],
@@ -112,11 +115,15 @@ class FaqjaPorosive extends StatelessWidget {
       trailing: p.gjendja == GjendjaEPorosise.dhene
           ? const Icon(Icons.qr_code_2)
           : Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error),
+      // 🚨 Reklama vjen te `.then`, pra PAS mbylljes së kodit QR — kurrë para
+      // hapjes së tij. Shih arsyetimin te `Ads.maybeShowAfterQr`.
       onTap: p.gjendja != GjendjaEPorosise.dhene
           ? null
-          : () => Navigator.of(context).push(MaterialPageRoute(
+          : () => Navigator.of(context)
+              .push(MaterialPageRoute(
                 builder: (_) => FaqjaProfilit(porosia: p, katalogu: katalogu),
-              )),
+              ))
+              .then((_) => Ads.maybeShowAfterQr()),
     );
   }
 

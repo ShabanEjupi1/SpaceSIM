@@ -4,9 +4,12 @@
 /// vijë çelësi i vërtetë, ndërrohet ky rresht i vetëm.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
+import 'app/ads.dart';
 import 'furnizuesi/furnizuesi.dart';
 import 'pamja/faqja_kryesore.dart';
 import 'te_dhena/katalogu.dart';
@@ -16,6 +19,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final katalogu = await Katalogu.nga();
   final ruajtja = await Ruajtja.hap();
+  // 🚨 `unawaited`, jo `await`: nisja e reklamave përfshin formularin e pëlqimit
+  // (UMP), pra rrjet. Ky aplikacion hapet pikërisht atëherë kur rrjeti mungon —
+  // po ta prisnim, ekrani i parë do të vonohej deri te afati prej 6 sekondash
+  // për të parë kodin e vet QR. Shih `lib/app/ads.dart`.
+  unawaited(Ads.start());
   runApp(SpaceSim(
     katalogu: katalogu,
     ruajtja: ruajtja,

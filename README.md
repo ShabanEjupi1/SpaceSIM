@@ -11,6 +11,30 @@ Kjo është me qëllim: **një profil i rremë që *duket* i vërtetë është m
 një gabim i qartë.** Shiriti i verdhë «PROVË» rri sipër derisa
 `Furnizuesi.iVertete` të kthejë `true`, dhe një test e mbron atë kusht.
 
+## 📣 Reklamat (nga 0.2.0)
+
+Të gjitha rregullat te **`lib/app/ads.dart`**, një skedar i vetëm. Banderolë mbi
+shiritin e lundrimit; interstitial vetëm **pas** mbylljes së kodit QR dhe jo më
+shpesh se një në 4 minuta; pa reklamë me shpërblim dhe pa app-open.
+
+🚨🚨 **Asnjë reklamë mbi ekranin e kodit QR.** Atë ekran e lexon një pajisje e
+DYTË që po skanon (telefoni nuk e skanon dot ekranin e vet), ndaj çdo reklamë
+atje bie brenda kuadratit që kamera po lexon dhe skanimi dështon pa e ditur
+askush pse. Kjo mbrohet nga një test që lexon **burimin** e
+`faqja_profilit.dart` — një test widget-i do të kapte vetëm banderolën, jo një
+interstitial.
+
+🚨 Reklamat sollën lejen `INTERNET` dhe (përmes bashkimit të manifesteve)
+`AD_ID`. Prandaj u ndryshuan njëkohësisht: `store/listimi.json` (sq **dhe**
+en-US), ky README, `web/privatesia.html` dhe
+[`linux-install/PLAY-ESIM.md`](../linux-install/PLAY-ESIM.md). Një listim që
+kundërshton «Sigurinë e të dhënave» është nga shkaqet më të shpeshta të
+pezullimit.
+
+Aplikacioni mbetet i plotë pa rrjet: katalogu, eSIM-et dhe QR-i janë vendëse.
+Ndërtimi web (esim.spacecode.tech) nuk shfaq asnjë reklamë — `Ads.supported`
+është `false` jashtë Android/iOS.
+
 ## 🔑 I gjithë furnizuesi rri pas një ndërfaqeje
 
 `lib/furnizuesi/furnizuesi.dart` është i vetmi skedar që e di se ekziston një
@@ -38,7 +62,8 @@ Compose + nginx: `linux-install/esim-web/`.
 1. **Furnizuesi** — llogari partneri dhe çelës API. Pa të, s'ka katalog dhe s'ka profil.
 2. **Pagesa** — PayPal-i ekziston; duhet lidhur, me faturë dhe politikë kthimi.
 3. **Play** — Data safety, publiku i synuar, kontakt i vërtetë; blerjet reale i
-   ndryshojnë të gjitha përgjigjet e sotme.
+   ndryshojnë të gjitha përgjigjet e sotme **për të dytën herë** (reklamat i
+   ndryshuan një herë më 04-08-2026; shitja shton «Purchase history»).
 4. **Pajtueshmëria** — kontrolli `*#06#` / EID shfaqet PARA çmimeve me qëllim:
    ankesa më e shpeshtë e këtij zhanri është një telefon i kyçur ose pa eSIM,
    dhe atëherë blerja ka ndodhur tashmë.

@@ -3,6 +3,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../app/ads.dart';
 import '../furnizuesi/furnizuesi.dart';
 import '../modele/modele.dart';
 import '../te_dhena/katalogu.dart';
@@ -57,15 +58,28 @@ class _FaqjaKryesoreState extends State<FaqjaKryesore> {
               ruajtja: widget.ruajtja,
               rifresko: _rifresko,
             ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _skeda,
-        onDestinationSelected: (i) {
-          setState(() => _skeda = i);
-          if (i == 1) _rifresko();
-        },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.travel_explore), label: 'Blej'),
-          NavigationDestination(icon: Icon(Icons.sim_card), label: 'Të miat'),
+      // Banderola rri MBI shiritin e lundrimit, jo nën të: nën të ajo do të
+      // ishte pikërisht aty ku bie gishti që ndërron skedën, dhe një klikim i
+      // pavullnetshëm te reklama është edhe mashtrim ndaj shpalljesit edhe
+      // arsyeja numër një pse mbyllen llogaritë e reja të AdMob-it.
+      // `mainAxisSize.min` që kolona të mos e marrë krejt ekranin; kur reklama
+      // mungon, `BannerSlot` zë zero hapësirë dhe pamja mbetet e njëjta me atë
+      // të versionit pa reklama (web, pa rrjet, pëlqim i refuzuar).
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const BannerSlot(),
+          NavigationBar(
+            selectedIndex: _skeda,
+            onDestinationSelected: (i) {
+              setState(() => _skeda = i);
+              if (i == 1) _rifresko();
+            },
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.travel_explore), label: 'Blej'),
+              NavigationDestination(icon: Icon(Icons.sim_card), label: 'Të miat'),
+            ],
+          ),
         ],
       ),
     );

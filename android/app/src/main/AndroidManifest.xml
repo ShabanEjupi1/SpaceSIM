@@ -1,8 +1,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 🚨 Deri te 0.1.0 ky aplikacion nuk kërkonte ASNJË leje dhe nuk prekte
+         fare rrjetin. Reklamat (0.2.0) e sollën `INTERNET`, dhe kjo ka pasoja
+         që nuk duken te kodi: te Play-i «Siguria e të dhënave» kalon nga «nuk
+         mblidhet asgjë» te «Identifikues pajisjeje — mblidhen DHE ndahen, për
+         reklama», «Advertising ID» kalon nga JO te PO, dhe çdo premtim «pa
+         reklama» ose «pa asnjë leje» te listimi bëhet i rremë.
+         Vetë aplikacioni mbetet i plotë pa rrjet: katalogu është brenda
+         paketës, eSIM-et rrinë në pajisje, QR-i vizatohet vendas. Interneti i
+         duhet VETËM reklamës. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- ⚠️ `com.google.android.gms.permission.AD_ID` NUK shkruhet këtu: e shton
+         vetë `google_mobile_ads` gjatë bashkimit të manifesteve, dhe Play-i
+         shikon manifestin e BASHKUAR te AAB-ja. Shkrimi me dorë nuk prish gjë,
+         por fsheh se nga vjen. -->
+
     <application
         android:label="eSIM Space"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Identifikuesi i aplikacionit te AdMob. Pa këtë rresht aplikacioni
+             RRËZOHET në nisje me një përjashtim të qartë nga SDK-ja — jo në
+             heshtje, ndaj s'ka si të kalojë pa u vënë re.
+             ⚠️ Ky është i eSIM-it (`~8254149674`). Girihu e ka `~4045126137`,
+             Shah Mat-i `~3928973421` dhe Tokërrgjiku `~3673667026`: e njëjta
+             llogari AdMob, katër aplikacione. Një identifikues i huaj nuk jep
+             gabim — jep zero mbushje, që zbulohet vetëm javë më vonë. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1776059573171352~8254149674"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
