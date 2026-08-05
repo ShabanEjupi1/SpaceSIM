@@ -279,6 +279,47 @@ if (cmd === 'kontrollo') {
 
   await call(`${API}/applications/${pkg}/edits/${edit.id}`, { method: 'DELETE' });
 
+} else if (cmd === 'shtetet') {
+  // Cakto shtetet e një gjurme: `shtetet <paketa> <bota|KS,AL,DE,…> <gjurma>`.
+  //
+  // 🚨 PSE EKZISTON: Console-i e ndalon lëshimin me «No countries or regions
+  // have been selected for this track. Add at least 1 country or region to roll
+  // out this release». Ai kufizim rri te `releases[].countryTargeting`, e cila
+  // NUK duket te `gjendja`/`kontrollo` (ato tregojnë vetëm status+versionCode),
+  // ndaj gjurma duket krejt e shëndetshme ndërsa lëshimi është i bllokuar.
+  //
+  // 🔑 `countryTargeting` i përket LËSHIMIT, jo gjurmës: ai humbet sa herë që
+  // lëshimi zëvendësohet. Pra `ngarko`/`promovo`/`pastro-gjurmet` e fshijnë pa
+  // e thënë, dhe kjo duhet rilëshuar pas tyre — jo një herë e mirë.
+  //
+  // `bota` = `includeRestOfWorld: true` pa listë, domethënë kudo ku shet Play-i,
+  // përfshirë shtetet që Google i shton më vonë. Një listë e shkruar me dorë
+  // ngrin: një shtet i ri nuk hyn kurrë vetvetiu.
+  const shtetet = process.argv[5];
+  const gjurma = process.argv[6] ?? 'production';
+  if (!shtetet) { console.error('jep shtetet: shtetet <paketa> <bota|KS,AL,…> [gjurma]'); process.exit(2); }
+
+  const targeting = shtetet === 'bota'
+    ? { includeRestOfWorld: true }
+    // ⚠️ Kodet duhen ISO 3166-1 alpha-2 me shkronja të mëdha; një kod i gabuar
+    // pranohet te PUT-i dhe bie vetëm te `:commit`.
+    : { countries: shtetet.split(',').map(s => s.trim().toUpperCase()), includeRestOfWorld: false };
+
+  const edit = await call(`${API}/applications/${pkg}/edits`, { method: 'POST', json: {} });
+  const para = await call(`${API}/applications/${pkg}/edits/${edit.id}/tracks/${gjurma}`);
+  const releases = para.releases ?? [];
+  if (!releases.length) throw new Error(`gjurma ${gjurma} është bosh — s'ka lëshim ku të vihen shtetet`);
+
+  // Vetëm lëshimet me AAB: një lëshim bosh (pa versionCodes) nuk pranon shtete.
+  for (const r of releases) {
+    if (!(r.versionCodes ?? []).length) continue;
+    r.countryTargeting = targeting;
+  }
+  await call(`${API}/applications/${pkg}/edits/${edit.id}/tracks/${gjurma}`,
+    { method: 'PUT', json: { track: gjurma, releases } });
+  await call(`${API}/applications/${pkg}/edits/${edit.id}:commit`, { method: 'POST' });
+  console.log(`✓ ${pkg} · ${gjurma}: ${shtetet === 'bota' ? 'e gjithë bota' : targeting.countries.join(',')}`);
+
 } else if (cmd === 'zbraze') {
   // Zbraz një gjurmë: `zbraze <paketa> <gjurma>`.
   //
