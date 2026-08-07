@@ -79,6 +79,21 @@ jobs:
           # nënshkruar me debug nuk ekziston fare.
           echo "SIGNED=true" >> "$GITHUB_ENV"
 
+      - name: Vendos konfigurimin e Firebase-it
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: \${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          # 🚨 Pa këtë skedar `flutter build appbundle` DËSHTON qëllimisht:
+          # `android/app/build.gradle.kts` hedh GradleException te një ndërtim
+          # lëshimi. Kjo është roja që zëvendësoi një AAB që hipte te Play me
+          # Analytics-in e vdekur pa e thënë asnjë shtresë.
+          if [ -z "\$GOOGLE_SERVICES_JSON_BASE64" ]; then
+            echo "::error::Mungon sekreti GOOGLE_SERVICES_JSON_BASE64."
+            exit 1
+          fi
+          echo "\$GOOGLE_SERVICES_JSON_BASE64" | base64 -d > android/app/google-services.json
+
+
       - run: flutter pub get
       - run: flutter build appbundle --release
       - run: flutter build apk --release
