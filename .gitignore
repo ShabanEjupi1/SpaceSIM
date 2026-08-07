@@ -47,3 +47,7 @@ app.*.map.json
 # Nënshkrimi i lëshimit — kurrë te git-i.
 android/key.properties
 **/*.jks
+
+# Konfigurimi i Firebase-it: identifikuesit e projektit + celesi Android.
+# Kopja e vetme e rezervuar rri te spacecode-brain/firebase/.
+google-services.json

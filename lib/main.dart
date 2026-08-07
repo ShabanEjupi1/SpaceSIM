@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 import 'app/ads.dart';
+import 'app/analitika.dart';
 import 'furnizuesi/furnizuesi.dart';
 import 'pamja/faqja_kryesore.dart';
 import 'te_dhena/katalogu.dart';
@@ -23,6 +24,9 @@ Future<void> main() async {
   // (UMP), pra rrjet. Ky aplikacion hapet pikërisht atëherë kur rrjeti mungon —
   // po ta prisnim, ekrani i parë do të vonohej deri te afati prej 6 sekondash
   // për të parë kodin e vet QR. Shih `lib/app/ads.dart`.
+  // Matja nis PARA reklamave: një hapje që dështon te formulari i pëlqimit
+  // duhet numëruar prapë, përndryshe humbasin pikërisht hapjet problematike.
+  unawaited(Analitika.nis());
   unawaited(Ads.start());
   runApp(SpaceSim(
     katalogu: katalogu,

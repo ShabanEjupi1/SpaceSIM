@@ -7,6 +7,32 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// 🚨 Shtojca zbatohet VETËM nëse `google-services.json` ekziston, DHE mungesa e
+// tij te një ndërtim LËSHIMI është GABIM, jo shënim.
+//
+// Pa këtë të dytën, një AAB hipën te Play me Analytics-in e vdekur dhe asgjë nuk
+// e thotë: gradle-ja e kapërcen shtojcën me një rresht të humbur mes mijërave,
+// `Firebase.initializeApp()` hidhet, dhe `analitika.dart` e kap me `debugPrint`.
+// Tri shtresa heshtjeje. Të paktën njëra duhet të bërtasë.
+//
+// Skedari NUK hyn te depoja. Merret me:
+//   python linux-install/tools/firebase-konfigurimi.py <celesi.json> merr tech.spacecode.esim
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    val eshteLeshim = gradle.startParameter.taskNames.any {
+        it.contains("Release") || it.contains("bundle") || it.contains("Bundle")
+    }
+    if (eshteLeshim) {
+        throw GradleException(
+            "google-services.json MUNGON te android/app/ — Analytics-i do te ishte " +
+            "i vdekur te ky leshim. Merre me firebase-konfigurimi.py (paketa tech.spacecode.esim) " +
+            "dhe vendose te android/app/google-services.json."
+        )
+    }
+    logger.lifecycle("google-services.json mungon — Firebase-i mbetet i fikur (debug).")
+}
+
 // Nënshkrimi i lëshimit. `key.properties` dhe `.jks` janë të gitignore-uara dhe
 // rrinë vetëm te makina që ndërton (te CI-ja i shkruan puna «Vendos çelësin»).
 //
