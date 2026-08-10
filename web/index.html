@@ -59,7 +59,8 @@
 <body>
   <script src="flutter_bootstrap.js" async></script>
 <!-- SEO:trupi:start -->
-<footer class="seo-permbajtja">
+<a class="seo-shigjeta" href="#seo-permbajtja">▾ rreth</a>
+<footer class="seo-permbajtja" id="seo-permbajtja">
   <section>
     <h1>eSIM Space — mbaj eSIM-et e tua në një vend | kodi QR edhe pa internet</h1>
     <p>Ruaj çdo eSIM në një vend: kodi QR gjithnjë me ty, edhe pa internet, edhe pa rrjet. Në shqip dhe në anglisht. Të dhënat rrinë në telefon.</p>
@@ -99,8 +100,55 @@
 /* 🚨 Faqja e aplikacionit është `height:100%` dhe `overflow:hidden` te të dyja
    paraqitjet (Flutter dhe Godot). Pa e kthyer atë, ky bllok ekziston te DOM-i
    por NUK arrihet dot me rrotullim — dhe përmbajtje që përdoruesi s'e sheh dot
-   është pikërisht ajo që Google-i e quan e fshehur. Prandaj rrotullimi kthehet. */
-html, body { height: auto !important; overflow: auto !important; }
+   është pikërisht ajo që Google-i e quan e fshehur. Prandaj rrotullimi kthehet.
+
+   🚨🚨 …POR vetëm `height:auto` te `html, body` e SHEMB aplikacionin. Flutter-i
+   e vendos `<flutter-view>` me `position:absolute; inset:0` (stil inline), dhe
+   Godot-i i jep `<canvas>`-it `height:100%` — të dyja maten kundrejt `body`-t.
+   Me `body{height:auto}` ajo lartësi bëhet ZERO dhe aplikacioni del si një
+   shirit i hollë sipër faqes, me tekstin e SEO-së poshtë tij. Pikërisht kjo u
+   pa te esim.spacecode.tech më 10-08-2026.
+   Kura: mos e ler lartësinë të varet nga `body` — jepja aplikacionit një kuti
+   të vetën `100dvh` NË RRJEDHË, dhe teksti rrjedh natyrshëm nën të.
+   `!important` te fleta e autorit e mund stilin inline të Flutter-it; ky
+   `<style>` rri te `<body>`, pra VIJON pas fletës që Flutter-i i shton `<head>`
+   gjatë nisjes, ndaj fiton edhe kur të dyja janë `!important`. */
+html, body { height: auto !important; overflow: auto !important; margin: 0; }
+
+/* Flutter: kutia e pamjes bëhet element normal me lartësinë e ekranit. */
+flutter-view, flt-glass-pane[flt-view-id], body > flutter-view {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100dvh !important;
+}
+/* Godot: canvas-i dhe shtresa e nisjes. `#status` është `position:absolute`
+   mbi `body`, pra shembet njësoj — `fixed` e mban mbi ekran gjatë ngarkimit. */
+body > canvas, canvas#canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100dvh !important;
+  outline: none;
+}
+#status, #status-progress, #status-notice {
+  position: fixed !important;
+}
+
+/* Aplikacioni e kap prekjen dhe e ndal rrotullimin e faqes, ndaj pa një lidhje
+   të dukshme teksti poshtë do të ishte i paarritshëm te telefoni — d.m.th.
+   sërish «i fshehur». Ky është ai afordim: i vogël, i dukshëm, jo mbi
+   komandat (poshtë në mes, ku asnjë nga aplikacionet s'ka buton). */
+.seo-shigjeta {
+  position: fixed; z-index: 2147483000;
+  left: 50%; bottom: 0; transform: translateX(-50%);
+  padding: .15rem .7rem .2rem; border-radius: .5rem .5rem 0 0;
+  font: 600 .72rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #14120f; background: rgba(224,180,108,.72);
+  text-decoration: none; opacity: .8;
+}
+.seo-shigjeta:hover { opacity: 1; }
+@media print { .seo-shigjeta { display: none; } }
+
 .seo-permbajtja {
   max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 4rem;
   font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
