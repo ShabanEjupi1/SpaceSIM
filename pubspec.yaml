@@ -25,6 +25,10 @@ dependencies:
   # bashkuar; shih `android/app/src/main/AndroidManifest.xml` dhe
   # `linux-install/PLAY-ESIM.md`.
   google_mobile_ads: ^6.0.0
+  # Furnizuesi i vërtetë (Airalo Partner API) — shtuar 10-08-2026. Vetëm
+  # `lib/furnizuesi/transporti_http.dart` e prek; `airalo.dart` mbetet i
+  # provueshëm pa rrjet dhe pa këtë varësi.
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
