@@ -1,0 +1,112 @@
+# Codemagic — ndërtimi i iOS-it për eSIM Space.
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# 🍎 PSE KY SKEDAR EKZISTON, DHE PSE JO GITHUB ACTIONS
+#
+# iOS-i nuk ndërtohet dot te Ampere-ja: ajo është arm64 pa `/dev/kvm`, dhe të dy
+# rrugët «macOS te Docker» kërkojnë x86_64 me virtualizim të ndërthurur. Kjo u
+# mat dhe u shkrua më 11-08-2026 — shih `linux-install/IOS-NDERTIMI.md`.
+#
+# Nga tri rrugët që punojnë vërtet, Codemagic u zgjodh sepse:
+# [•] është ndërtuar posaçërisht për Flutter, pra `flutter build ipa` nuk kërkon
+#     asnjë rregullim mjedisi;
+# [•] shkalla falas jep ~500 minuta macOS në muaj — mjaftueshëm për ritmin tonë
+#     të vërtetë prej disa lëshimesh në muaj;
+# [•] e menaxhon vetë nënshkrimin me çelësin e API-së së App Store Connect-it,
+#     pra asnjë certifikatë nuk kalon nga një kuti e jona.
+#
+# GitHub Actions me `macos-latest` do të ishte falas VETËM te depo publike; te
+# depo private minutat e macOS-it faturohen 10× më shtrenjtë se ato të Linux-it.
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# ⛔ ÇFARË DUHET PARA SE KY SKEDAR TË BËJË DIÇKA
+#
+# 1. **Apple Developer Program** i aktivizuar (99 USD/vit). Shabani, 11-08-2026:
+#    «apple developer is almost ready just some verification pending process» —
+#    pra ky është hapi që pritet, dhe asgjë tjetër nuk lëviz para tij.
+# 2. Te App Store Connect → Users and Access → **Integrations → App Store
+#    Connect API** → një çelës i ri. Ruaj `.p8`-në: **shkarkohet një herë**.
+# 3. Te Codemagic → Teams → **Integrations → Developer Portal**, ngjit:
+#    Issuer ID, Key ID dhe skedarin `.p8`.
+# 4. Te App Store Connect krijo aplikacionin me bundle ID-në tech.spacecode.esim —
+#    njësoj si te Play-i, ngarkimi i PARË kërkon që aplikacioni të ekzistojë.
+#
+# 🚨 Deri atëherë ky fluks **dështon me qëllim** te hapi i nënshkrimit. Kjo është
+# më mirë se një fluks që «kalon» duke ndërtuar një `.app` të panënshkruar, i
+# cili nuk instalohet askund dhe e fsheh se çfarë mungon.
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# 🕌 Rregulli i pamjes vlen edhe këtu: asnjë ikonë, asnjë grafikë dhe asnjë
+# pamje e dyqanit nuk përmban qenie të gjalla. Shih [[workflow-pamja-pa-qenie-te-gjalla]].
+
+workflows:
+  ios:
+    name: eSIM Space — iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        # Grupi i ndryshoreve te Codemagic. Duhet të përmbajë APP_STORE_APP_ID.
+        - appstore
+      vars:
+        BUNDLE_ID: "tech.spacecode.esim"
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: tech.spacecode.esim
+
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        # 🚨 Vetëm etiketat `v*`, njësoj si te CI-ja e Android-it. Një ndërtim për
+        # çdo push do ta harxhonte kuotën falas brenda javës së parë, dhe atëherë
+        # lëshimi i vërtetë do të priste.
+        - pattern: 'v*'
+          include: true
+
+    scripts:
+      - name: Varësitë
+        script: flutter pub get
+
+      - name: Analiza dhe provat
+        # 🔑 Provat xhirojnë PARA ndërtimit, jo pas: një ndërtim iOS zgjat ~8
+        # minuta nga kuota, dhe s'ka kuptim të paguhen ato minuta për një kod që
+        # nuk kalon `flutter test`.
+        script: |
+          flutter analyze --no-fatal-infos
+          flutter test
+
+      - name: Numri i ndërtimit nga Codemagic
+        # 🚨 App Store Connect e refuzon një ngarkim me numër ndërtimi që e ka
+        # parë njëherë, dhe gabimi vjen PAS ngarkimit të plotë. `BUILD_NUMBER`
+        # rritet vetë te çdo xhirim, ndaj përplasja bëhet e pamundur.
+        script: |
+          agvtool new-version -all $(($BUILD_NUMBER))
+        working_directory: ios
+
+      - name: Ndërtimi i IPA-së
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - flutter_drive.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        # ⚠️ `false` me qëllim: ngarkimi shkon te TestFlight dhe ndalet aty.
+        # Dërgimi automatik për rishikim do të thoshte se një etiketë e vënë
+        # gabimisht nis një rishikim njerëzor që zgjat ditë dhe nuk anulohet dot.
+        submit_to_testflight: true
+        submit_to_app_store: false
+      email:
+        recipients:
+          - shaban@shabanejupi.tech
+        notify:
+          success: true
+          failure: true
