@@ -43,10 +43,14 @@ Map<String, dynamic> get _shenja => {
     };
 
 /// Përgjigje e `/v2/packages` me formën e vërtetë: shtet → operator → paketa.
+///
+/// 🚨 [zbritje] jep formën e llogarisë sonë të vërtetë (`discount_pricing`,
+/// matur 11-08-2026): **asnjë** `net_price`, vetëm `recommended_retail_price`.
 Map<String, dynamic> _katalogu({
   double euro = 4.5,
   int mb = 3072,
   bool paKufi = false,
+  bool zbritje = false,
 }) =>
     {
       'data': [
@@ -69,10 +73,13 @@ Map<String, dynamic> _katalogu({
                   'is_unlimited': paKufi,
                   'title': '3 GB - 15 Days',
                   'data': '3 GB',
-                  'net_price': 5.2,
+                  if (!zbritje) 'net_price': 5.2,
                   'prices': {
-                    'net_price': {'USD': 5.2, 'EUR': euro},
-                    'recommended_retail_price': {'USD': 6.5, 'EUR': 5.9},
+                    if (!zbritje) 'net_price': {'USD': 5.2, 'EUR': euro},
+                    'recommended_retail_price': {
+                      'USD': 6.5,
+                      'EUR': zbritje ? euro : 5.9,
+                    },
                   },
                 },
               ],
@@ -80,6 +87,7 @@ Map<String, dynamic> _katalogu({
           ],
         },
       ],
+      if (zbritje) 'pricing': {'model': 'discount_pricing', 'discount_percentage': 20},
       'meta': {'message': 'success', 'current_page': 1, 'total': 1},
     };
 
@@ -170,6 +178,40 @@ void main() {
 
     expect(p.centa, 518); // 450 + 67,5 → 68
     expect(p.centa, isA<int>());
+  });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 🚨🚨 Modeli `discount_pricing` — forma e llogarisë sonë të VËRTETË.
+  //
+  // Provat e para u shkruan pa çelësa, mbi një përgjigje të supozuar me
+  // `net_price`. Më 11-08-2026, me çelësat në dorë, përgjigjja e vërtetë e
+  // `partners-api.airalo.com` u mat: **zero** `net_price` te 204 shtetet.
+  // Pra pesëmbëdhjetë prova të gjelbra përshkruanin një API që nuk ekziston,
+  // dhe katalogu do të dilte BOSH te telefoni pa asnjë gabim.
+
+  test('katalogu NUK del bosh kur mungon fare `net_price` (discount_pricing)', () async {
+    final r = _Rremi({
+      '/v2/token': [_ok(_shenja)],
+      '/v2/packages': [_ok(_katalogu(euro: 10, zbritje: true))],
+    });
+
+    final paketat = await _klienti(r).paketat();
+
+    // Ky `hasLength(1)` është e gjithë prova: leximi i vjetër jepte 0.
+    expect(paketat, hasLength(1));
+    expect(paketat.single.centa, 1000);
+  });
+
+  test('te `discount_pricing` marzha NUK shtohet — ai numër është vetë shitja', () async {
+    final r = _Rremi({
+      '/v2/token': [_ok(_shenja)],
+      '/v2/packages': [_ok(_katalogu(euro: 10, zbritje: true))],
+    });
+
+    // 🔑 Fitimi vjen nga zbritja 20% te faturimi, jo nga një shtesë mbi listë.
+    // Marzha mbi çmimin e rekomanduar do të thoshte se dyqani ynë është
+    // gjithmonë më i shtrenjtë se aplikacioni i vetë Airalo-s.
+    expect((await _klienti(r, marzha: 15).paketat()).single.centa, 1000);
   });
 
   test('paketa pa çmim në euro HIDHET, nuk shitet me shifër dollari', () async {

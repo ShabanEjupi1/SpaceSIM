@@ -267,34 +267,58 @@ class KlientiAiralo {
     final dite = (p['day'] as num?)?.toInt();
     if (mb == null || dite == null) return null;
 
-    final neto = _euroCenta(p);
-    if (neto == null) return null;
+    final c = _euroCenta(p);
+    if (c == null) return null;
 
     return Paketa(
       id: id,
       kodiIShtetit: kodiIShtetit,
       gigabajt: mb / 1024,
       dite: dite,
-      centa: neto + (neto * marzhaNePerqindje / 100).round(),
+      // Marzha shtohet VETËM mbi netot. Te modeli `discount_pricing` numri që
+      // marrim është vetë çmimi i shitjes i Airalo-s — shih [_euroCenta].
+      centa: c.eshteNeto
+          ? c.centa + (c.centa * marzhaNePerqindje / 100).round()
+          : c.centa,
       rrjetet: rrjeti.isEmpty ? const [] : [rrjeti],
     );
   }
 
-  /// Çmimi neto në **centa euro**.
+  /// Çmimi në **centa euro**, bashkë me atë që tregon nëse është *neto* (kostoja
+  /// jonë) apo çmimi i gatshëm i shitjes.
   ///
-  /// 🚨 `net_price` te niveli i parë është në dollarë. Euroja merret nga
-  /// `prices.net_price.EUR` kur ekziston — përndryshe paketa **hidhet**, sepse
-  /// një shifër dollarësh e shfaqur me shenjën «€» është gabim që e paguan
-  /// blerësi. Rrumbullakimi bëhet një herë, te centat, dhe kurrë më vonë:
-  /// [Paketa.centa] është `int` pikërisht për këtë.
-  static int? _euroCenta(Map<String, dynamic> p) {
+  /// 🚨🚨 Airalo ka **dy modele çmimi**, dhe llogaria jonë është te i dyti:
+  ///
+  /// - `net_price` — përgjigjja mban `prices.net_price.EUR` = kostoja jonë, dhe
+  ///   marzha rri mbi të.
+  /// - `discount_pricing` — **s'ka fare `net_price`**. Përgjigjja mban vetëm
+  ///   `prices.recommended_retail_price.EUR`; zbritja jonë (20%) hiqet te
+  ///   faturimi, jo te katalogu. Marzha mbi këtë numër do të thoshte shitje MBI
+  ///   çmimin e Airalo-s vetë — pra dyqani ynë do të ishte gjithmonë më i shtrenjtë.
+  ///
+  /// 🚨 Matur më **11-08-2026** te `partners-api.airalo.com`: përgjigjja e vërtetë
+  /// e llogarisë sonë ka **zero** `net_price` te 204 shtetet. Leximi i vjetër
+  /// (vetëm `net_price.EUR`) hidhte çdo paketë dhe linte katalogun **bosh**, pa
+  /// asnjë gabim — pikërisht dështimi i heshtur që kushton.
+  ///
+  /// 🚨 Dollarët nuk përdoren kurrë: `price` te niveli i paketës është USD, dhe
+  /// një shifër dollarësh e shfaqur me «€» është gabim që e paguan blerësi.
+  /// Rrumbullakimi bëhet një herë, te centat: [Paketa.centa] është `int`
+  /// pikërisht për këtë.
+  static ({int centa, bool eshteNeto})? _euroCenta(Map<String, dynamic> p) {
     final cmimet = p['prices'];
-    if (cmimet is Map) {
-      final neto = cmimet['net_price'];
-      if (neto is Map && neto['EUR'] is num) {
-        return ((neto['EUR'] as num) * 100).round();
-      }
+    if (cmimet is! Map) return null;
+
+    final neto = cmimet['net_price'];
+    if (neto is Map && neto['EUR'] is num) {
+      return (centa: ((neto['EUR'] as num) * 100).round(), eshteNeto: true);
     }
+
+    final lista = cmimet['recommended_retail_price'];
+    if (lista is Map && lista['EUR'] is num) {
+      return (centa: ((lista['EUR'] as num) * 100).round(), eshteNeto: false);
+    }
+
     return null;
   }
 }

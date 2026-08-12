@@ -70,8 +70,9 @@ Furnizuesi zgjidhFurnizuesin() {
         bazaUrl: kRelja,
         burimi: const ShenjaEAplikacionit(kCelesiIAplikacionit),
         transporti: transporti,
-        // Marzha rri mbi çmimin NETO (Airalo jep 20% zbritje mbi listën), jo
-        // mbi listën — përndryshe do të shitej nën koston tonë.
+        // Marzha rri mbi çmimin NETO, dhe **vetëm** atje: llogaria jonë është
+        // te modeli `discount_pricing`, ku i vetmi çmim që kthehet është ai i
+        // rekomanduar i Airalo-s. Shih `_euroCenta` te airalo.dart.
         marzhaNePerqindje: kMarzha,
       ),
       // 🟡 Shiriti «PROVË» hiqet vetëm kur kjo jepet shprehimisht te ndërtimi,
@@ -84,7 +85,14 @@ Furnizuesi zgjidhFurnizuesin() {
 }
 
 /// Marzha jonë mbi çmimin neto, në përqindje.
-const int kMarzha = int.fromEnvironment('ESIM_MARZHA', defaultValue: 15);
+///
+/// 🚨 **0, jo 15** që nga 11-08-2026. Llogaria jonë e vërtetë kthen vetëm
+/// `recommended_retail_price` (modeli `discount_pricing`), pra çmimin e shitjes
+/// së vetë Airalo-s; fitimi vjen nga zbritja 20% te faturimi. Një marzhë mbi atë
+/// numër do ta bënte dyqanin tonë gjithmonë më të shtrenjtë se aplikacioni i
+/// Airalo-s — pra pa asnjë arsye për ta zgjedhur. Vlera lexohet prapë nga
+/// ndërtimi, po parazgjedhja nuk guxon të jetë ajo që shet mbi listë.
+const int kMarzha = int.fromEnvironment('ESIM_MARZHA', defaultValue: 0);
 
 class SpaceSim extends StatelessWidget {
   const SpaceSim({
