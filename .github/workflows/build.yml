@@ -105,12 +105,17 @@ jobs:
 
   # ── Play ──────────────────────────────────────────────────────────────────
   #
-  # 🚨 Gjurma është `alpha` (= **Closed testing**), jo `internal`. Gjurma e
-  # brendshme është e vetmja që Google-i nuk e shqyrton: ajo NUK e nxjerr
-  # aplikacionin nga «Draft» dhe NUK numërohet për rregullin «12 testues × 14
-  # ditë» që kërkohet nga një llogari personale para prodhimit.
+  # 🚨 Gjurma është `production`, jo `alpha` — NDRYSHUAR më 12-08-2026.
+  # Deri atëherë ishte `alpha` (Closed testing), dhe kjo ishte e saktë sa kohë
+  # llogaria ishte duke plotësuar «12 testues × 14 ditë». Aplikacioni doli te
+  # prodhimi që atëherë, po ky rresht mbeti — pra ÇDO etiketë `v*` e re hipte te
+  # testimi i mbyllur dhe asnjë përdorues nuk e merrte kurrë përditësimin.
+  # Shabani e pa nga ana tjetër: «no new release … I think the same way no
+  # publish was released at all». Kishte të drejtë, dhe shkaku ishte këtu.
+  # 🔑 Bashkë me këtë duhet `"gjendja": "completed"` te store/shenimet.json:
+  #    një lëshim `draft` te prodhimi pret prapë një klikim te Console-i.
   play:
-    name: Play (testimi i mbyllur)
+    name: Play (prodhimi)
     if: startsWith(github.ref, 'refs/tags/v')
     needs: android
     runs-on: ubuntu-latest
@@ -134,6 +139,6 @@ jobs:
           node store/tools/play.mjs "$RUNNER_TEMP/play.json" ngarko \
             tech.spacecode.esim \
             dist/bundle/release/app-release.aab \
-            alpha \
+            production \
             store/shenimet.json
           rm -f "$RUNNER_TEMP/play.json"
