@@ -1,12 +1,14 @@
 /// Kodi QR i një profili — qoftë i blerë, qoftë i ruajtur nga vetë blerësi.
 library;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../modele/modele.dart';
 import '../te_dhena/katalogu.dart';
+import 'qr_eksporti.dart';
 
 class FaqjaProfilit extends StatelessWidget {
   const FaqjaProfilit({super.key, required Porosia porosia, required Katalogu katalogu})
@@ -69,8 +71,9 @@ class FaqjaProfilit extends StatelessWidget {
                 const Text(
                   'Android: Cilësimet → Rrjeti → SIM → Shto eSIM → Skano kodin.\n'
                   'iPhone: Cilësimet → Celulari → Shto eSIM → Përdor kodin QR.\n\n'
-                  'Skanoje me një pajisje TJETËR, ose ruaje figurën dhe zgjidhe '
-                  'nga galeria — telefoni nuk e skanon dot ekranin e vet.',
+                  'Telefoni nuk e skanon dot ekranin e vet. Prandaj ruaje ose dërgoje '
+                  'kodin me butonin poshtë, dhe skanoje nga pajisja tjetër — ose '
+                  'shtype dhe skanoje nga letra.',
                 ),
                 const SizedBox(height: 20),
                 if (_esim?.shenim != null) _Rreshti('Shënim', _esim!.shenim!),
@@ -78,6 +81,31 @@ class FaqjaProfilit extends StatelessWidget {
                   _Rreshti('ICCID', _porosia!.profili!.iccid),
                 _Rreshti('LPA', lpa),
                 const SizedBox(height: 12),
+                // 🚨 Jo te web-i: `path_provider` nuk ka dosje të përkohshme te
+                // shfletuesi dhe do të binte me «MissingPluginException» — pra
+                // butoni do të ekzistonte te esim.spacecode.tech vetëm për të
+                // treguar një gabim. Aty QR-i ruhet me klikim të djathtë.
+                if (!kIsWeb) ...<Widget>[
+                // 🚨 Ky buton rri MBI atë të kopjimit sepse është zgjidhja e vërtetë e
+                // fjalisë më sipër: telefoni nuk e skanon dot ekranin e vet.
+                // Kopjimi i LPA-së ndihmon vetëm atë që di ta ngjisë diku.
+                FilledButton.icon(
+                  onPressed: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    try {
+                      await ndajQr(lpa: lpa, emri: _titulli);
+                    } catch (e) {
+                      messenger
+                        ..clearSnackBars()
+                        ..showSnackBar(SnackBar(
+                            content: Text('Kodi QR nuk u ruajt dot: $e')));
+                    }
+                  },
+                  icon: const Icon(Icons.ios_share),
+                  label: const Text('Ruaj, shtyp ose dërgo kodin QR'),
+                ),
+                const SizedBox(height: 8),
+                ],
                 OutlinedButton.icon(
                   onPressed: () async {
                     await Clipboard.setData(ClipboardData(text: lpa));
