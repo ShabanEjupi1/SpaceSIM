@@ -1,7 +1,7 @@
 name: esim
 description: "eSIM Space — mbaj eSIM-et e tua në një vend."
 publish_to: 'none'
-version: 0.4.0+4
+version: 0.5.0+5
 
 environment:
   sdk: ^3.10.9
@@ -29,6 +29,13 @@ dependencies:
   # `lib/furnizuesi/transporti_http.dart` e prek; `airalo.dart` mbetet i
   # provueshëm pa rrjet dhe pa këtë varësi.
   http: ^1.5.0
+  # 🚨 Ekrani i kodit QR i thoshte blerësit «ruaje figurën dhe zgjidhe nga
+  # galeria» — dhe nuk kishte asnjë buton që e ruante. Pra udhëzimi i vetëm që
+  # e zgjidh problemin «telefoni nuk e skanon dot ekranin e vet» ishte i
+  # pazbatueshëm. Këto të dyja e nxjerrin QR-in nga ekrani: te shtypësi, te një
+  # pajisje tjetër, ose te galeria.
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

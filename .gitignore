@@ -51,3 +51,6 @@ android/key.properties
 # Konfigurimi i Firebase-it: identifikuesit e projektit + celesi Android.
 # Kopja e vetme e rezervuar rri te spacecode-brain/firebase/.
 google-services.json
+
+# Dosje pune e Kotlin-it, e krijuar nga ndërtimi te Ampere.
+android/.kotlin/

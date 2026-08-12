@@ -1,17 +1,17 @@
 {
-  "_koment": [
-    "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
-    "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
-    "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
-    "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
-    "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
-    "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
-    "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
-  ],
-  "gjendja": "draft",
-  "emri": "0.3.0 (3) — ikona dhe kodet e shteteve",
-  "shenimet": {
-    "sq": "• Ikonë e re: një çip eSIM-i, e vizatuar posaçërisht. Deri tani rrinte ikona e parazgjedhur.\n• Shtetet tregohen me kodin me dy shkronja (XK, AL, DE) në vend të emoji-ve të flamujve — ata nuk ekzistojnë fare te disa pajisje dhe atje dilnin katrorë bosh.\n• Udhëzimet e instalimit u pastruan nga shenjat që disa telefona nuk i vizatojnë dot.\n\nGjithçka tjetër si më parë: eSIM-et e tua, kodi QR pa internet, kontrolli i pajisjes dhe çmimet orientuese për 14 shtete.",
-    "en-US": "• A new icon: an eSIM chip, drawn for this app. Until now it shipped the default one.\n• Countries now show their two-letter code (XK, AL, DE) instead of flag emoji, which do not exist at all on some devices and showed up as empty boxes there.\n• The install instructions no longer use symbols some phones cannot draw.\n\nEverything else is unchanged: your eSIMs, the offline QR, the device check and indicative prices for 14 countries."
-  }
+   "_koment" : [
+      "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
+      "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
+      "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
+      "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
+      "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
+      "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
+      "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
+   ],
+   "emri" : "0.5.0 (5) — QR-i që shtypet dhe dërgohet",
+   "gjendja" : "completed",
+   "shenimet" : {
+      "en-US" : "The QR code can finally leave the screen.\n\nUntil now the screen said \"save the image and scan it from another device\" — because a phone cannot scan its own screen — but there was no button that saved it. Now there is: \"Save, print or send the QR code\".\n\nThe image comes out at 1024 pixels, large enough to print on paper. From the share sheet it goes to your printer, a second device, the gallery or Drive.\n\nNo ad is ever shown over the QR code.",
+      "sq" : "Kodi QR nxirret më në fund nga ekrani.\n\nDeri tani ekrani thoshte «ruaje figurën dhe skanoje nga pajisja tjetër» — sepse telefoni nuk e skanon dot ekranin e vet — po nuk kishte asnjë buton që e ruante. Tani ka: «Ruaj, shtyp ose dërgo kodin QR».\n\nFigura del 1024 piksele, e mjaftueshme edhe për shtyp mbi letër. Nga fleta e ndarjes e çon te shtypësi, te pajisja e dytë, te galeria ose te Drive-i.\n\nAsnjë reklamë nuk shfaqet mbi kodin QR."
+   }
 }
