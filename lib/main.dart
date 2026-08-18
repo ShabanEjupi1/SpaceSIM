@@ -14,14 +14,38 @@ import 'app/analitika.dart';
 import 'furnizuesi/airalo.dart';
 import 'furnizuesi/furnizuesi.dart';
 import 'furnizuesi/transporti_http.dart';
+import 'pagesa/pagesa.dart';
 import 'pamja/faqja_kryesore.dart';
 import 'te_dhena/katalogu.dart';
 import 'te_dhena/ruajtja.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final katalogu = await Katalogu.nga();
+  final emrat = await Katalogu.nga();
   final ruajtja = await Ruajtja.hap();
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🚨🚨 Katalogu vjen NGA FURNIZUESI, kurrë nga aseti (17-08-2026)
+  //
+  // Deri sot ekrani i parë mbushej nga `assets/katalogu.json`, i cili e
+  // shpallte vetë se çmimet ishin të shpikura — dhe që nga 12-08 aplikacioni
+  // shiste me to. Shih [Katalogu.bashko] për matjet.
+  //
+  // Rendi këtu është zgjedhur për një aplikacion udhëtimi:
+  //   1. kopja e ruajtur shfaqet MENJËHERË (edhe pa rrjet, edhe në avion);
+  //   2. rrjeti rifreskon në sfond dhe ekrani përditësohet kur mbërrin;
+  //   3. vetëm kur s'ka fare kopje pritet rrjeti — sepse atëherë s'ka çfarë
+  //      të tregohet.
+  final furnizuesi = zgjidhFurnizuesin();
+  var katalogu = Katalogu.ngaCache(ruajtja.katalogu(), emrat) ?? emrat;
+  final rifreskimi = terhiqKatalogun(emrat: emrat, ruajtja: ruajtja);
+  if (katalogu.bosh) {
+    // 🚨 Afat: pa të, një rrjet i ngadaltë (aeroport) e mban ekranin e nisjes
+    // pa fund. Me të, aplikacioni hapet bosh dhe rifreskimi vazhdon vetë.
+    katalogu = await rifreskimi
+        .timeout(const Duration(seconds: 12), onTimeout: () => null)
+        .then((k) => k ?? emrat);
+  }
   // 🚨 `unawaited`, jo `await`: nisja e reklamave përfshin formularin e pëlqimit
   // (UMP), pra rrjet. Ky aplikacion hapet pikërisht atëherë kur rrjeti mungon —
   // po ta prisnim, ekrani i parë do të vonohej deri te afati prej 6 sekondash
@@ -33,8 +57,57 @@ Future<void> main() async {
   runApp(SpaceSim(
     katalogu: katalogu,
     ruajtja: ruajtja,
-    furnizuesi: zgjidhFurnizuesin(),
+    furnizuesi: furnizuesi,
+    pagesa: zgjidhPagesen(),
+    rifreskimi: rifreskimi,
   ));
+}
+
+/// Tërheq katalogun e vërtetë dhe e ruan. Kthen `null` nëse nuk ia doli.
+///
+/// 🚨 `null` e jo hedhje gabimi: dështimi këtu është i pritshëm (pa rrjet) dhe
+/// nuk guxon ta ndalë nisjen. Kush e thërret vendos vetë ç'të bëjë.
+///
+/// 🔑 Merren TË DYJA llojet: `local` (paketa për një shtet) dhe `global`
+/// (rajonale). Pa `global`, një udhëtar nëpër disa shtete nuk gjen kurrë
+/// paketën që i duhet, dhe lista duket e mangët pa asnjë shenjë përse.
+Future<Katalogu?> terhiqKatalogun({
+  required Katalogu emrat,
+  required Ruajtja ruajtja,
+}) async {
+  if (kRelja.isEmpty) return null;
+  try {
+    final klienti = KlientiAiralo(
+      bazaUrl: kRelja,
+      burimi: const ShenjaEAplikacionit(kCelesiIAplikacionit),
+      transporti: transportiHttp(),
+      marzhaNePerqindje: kMarzha,
+    );
+    final r = await klienti.katalogu();
+    if (r.paketat.isEmpty) return null;
+    final k = Katalogu.bashko(
+      paketat: r.paketat,
+      titujt: r.titujt,
+      emrat: emrat,
+    );
+    await ruajtja.ruajKatalogun(k.teCache(r.titujt));
+    return k;
+  } catch (_) {
+    return null;
+  }
+}
+
+/// 🔑 I VETMI vend ku zgjidhet pagesa, dhe ai është i njëjti kusht si te
+/// [zgjidhFurnizuesin]: pa relenë, nuk ka as furnizues as pagesë. Të dyja
+/// mbahen të ndara sepse dështojnë ndryshe — dhe blerësi duhet ta dijë cila
+/// nga të dyat mungon.
+Pagesa zgjidhPagesen() {
+  if (kRelja.isEmpty) return const PagesaEPaLidhur();
+  return PagesaPermesReleje(
+    bazaUrl: kRelja,
+    celesi: kCelesiIAplikacionit,
+    transporti: transportiHttp(),
+  );
 }
 
 /// Adresa e relesë sonë, e dhënë te ndërtimi:
@@ -100,11 +173,17 @@ class SpaceSim extends StatelessWidget {
     required this.katalogu,
     required this.ruajtja,
     required this.furnizuesi,
+    required this.pagesa,
+    this.rifreskimi,
   });
 
   final Katalogu katalogu;
   final Ruajtja ruajtja;
   final Furnizuesi furnizuesi;
+  final Pagesa pagesa;
+
+  /// Katalogu i freskët, kur të mbërrijë. Shih [terhiqKatalogun].
+  final Future<Katalogu?>? rifreskimi;
 
   static const seed = Color(0xFF1F6F5C);
 
@@ -125,6 +204,8 @@ class SpaceSim extends StatelessWidget {
         katalogu: katalogu,
         ruajtja: ruajtja,
         furnizuesi: furnizuesi,
+        pagesa: pagesa,
+        rifreskimi: rifreskimi,
       ),
     );
   }

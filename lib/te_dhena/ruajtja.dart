@@ -53,6 +53,21 @@ class Ruajtja {
     await ruaj(l);
     return l;
   }
+
+  // ── Katalogu i ruajtur ────────────────────────────────────────────────────
+  //
+  // 🔑 Ky aplikacion hapet pikërisht atje ku rrjeti mungon: sapo zbret nga
+  // aeroplani, para se të ketë internet. Pa një kopje vendëse të katalogut,
+  // ekrani i parë do të ishte bosh saktësisht atëherë kur duhet më shumë.
+  //
+  // 🚨 Ruhet katalogu i VËRTETË i furnizuesit. Deri më 17-08-2026 rolin e tij e
+  // luante një aset me çmime të shpikura — shih [Katalogu.bashko].
+  static const _celesiKatalogut = 'katalogu.v1';
+
+  String? katalogu() => _p.getString(_celesiKatalogut);
+
+  Future<void> ruajKatalogun(String json) =>
+      _p.setString(_celesiKatalogut, json);
 }
 
 /// eSIM-et e vetë blerësit — çelës i ndarë nga porositë, sepse jetët e tyre

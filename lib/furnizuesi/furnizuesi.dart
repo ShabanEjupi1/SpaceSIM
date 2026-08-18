@@ -47,7 +47,12 @@ abstract class Furnizuesi {
   bool get iVertete;
 
   /// Blen paketën dhe kthen profilin. Hidhet [GabimFurnizuesi] nëse dështon.
-  Future<Profili> blej(Paketa paketa, {required String porosiaId});
+  ///
+  /// [kapja] është identifikuesi i kapjes së pagesës te PayPal-i. 🚨 Pa të,
+  /// relaja kthen **402** — dhe kjo nuk është kufizim i tepërt: çelësi i
+  /// aplikacionit nxirret nga paketa për dy minuta, ndaj vetëm pagesa e ndan
+  /// një blerës nga bilanci ynë. Shih `lib/pagesa/pagesa.dart`.
+  Future<Profili> blej(Paketa paketa, {required String porosiaId, String? kapja});
 
   /// Sa të dhëna kanë mbetur, nëse furnizuesi e mbështet. `null` = nuk dihet,
   /// dhe ndërfaqja atëherë NUK shfaq një shifër të trilluar.
@@ -71,7 +76,7 @@ class FurnizuesISimuluar implements Furnizuesi {
   bool get mundBlihet => true;
 
   @override
-  Future<Profili> blej(Paketa paketa, {required String porosiaId}) async {
+  Future<Profili> blej(Paketa paketa, {required String porosiaId, String? kapja}) async {
     await Future<void>.delayed(vonesa);
 
     // 🚨 Një furnizues i simuluar që nuk dështon KURRË e fsheh gabimin më të
@@ -117,7 +122,7 @@ class FurnizuesIPaLidhur implements Furnizuesi {
   bool get iVertete => false;
 
   @override
-  Future<Profili> blej(Paketa paketa, {required String porosiaId}) async =>
+  Future<Profili> blej(Paketa paketa, {required String porosiaId, String? kapja}) async =>
       throw const GabimFurnizuesi(
         'Shitja ende nuk ka nisur. Çmimet janë orientuese.',
         rikthyeshem: false,

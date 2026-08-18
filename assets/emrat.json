@@ -1,0 +1,19 @@
+{
+  "_": "Vetëm PËRKTHIMET e emrave të shteteve dhe rajoni ku renditen. Asnjë paketë dhe asnjë çmim: ato vijnë NGA FURNIZUESI, përmes relesë. Deri më 17-08-2026 këtu rrinin çmime të shpikura dhe aplikacioni i shiste.",
+  "shtetet": [
+    {"kodi": "XK", "emri": "Kosovë", "rajoni": "Ballkan"},
+    {"kodi": "AL", "emri": "Shqipëri", "rajoni": "Ballkan"},
+    {"kodi": "MK", "emri": "Maqedoni e Veriut", "rajoni": "Ballkan"},
+    {"kodi": "ME", "emri": "Mal i Zi", "rajoni": "Ballkan"},
+    {"kodi": "TR", "emri": "Turqi", "rajoni": "Evropë"},
+    {"kodi": "DE", "emri": "Gjermani", "rajoni": "Evropë"},
+    {"kodi": "CH", "emri": "Zvicër", "rajoni": "Evropë"},
+    {"kodi": "IT", "emri": "Itali", "rajoni": "Evropë"},
+    {"kodi": "AT", "emri": "Austri", "rajoni": "Evropë"},
+    {"kodi": "SE", "emri": "Suedi", "rajoni": "Evropë"},
+    {"kodi": "GB", "emri": "Mbretëri e Bashkuar", "rajoni": "Evropë"},
+    {"kodi": "AE", "emri": "Emiratet e Bashkuara", "rajoni": "Lindje e Mesme"},
+    {"kodi": "SA", "emri": "Arabi Saudite", "rajoni": "Lindje e Mesme"},
+    {"kodi": "US", "emri": "Shtetet e Bashkuara", "rajoni": "Amerikë"}
+  ]
+}

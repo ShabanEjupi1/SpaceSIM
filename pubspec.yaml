@@ -1,7 +1,7 @@
 name: esim
 description: "eSIM Space — mbaj eSIM-et e tua në një vend."
 publish_to: 'none'
-version: 0.5.0+5
+version: 0.6.0+6
 
 environment:
   sdk: ^3.10.9
@@ -36,6 +36,11 @@ dependencies:
   # pajisje tjetër, ose te galeria.
   share_plus: ^10.1.4
   path_provider: ^2.1.5
+  # 🚨 Pagesa hapet te shfletuesi, jo brenda aplikacionit — dhe kjo është
+  # kërkesë e PayPal-it, jo zgjedhje: hyrja te llogaria e tyre brenda një
+  # WebView-je bllokohet, sepse aplikacioni do të mund ta lexonte fjalëkalimin.
+  # Shih `lib/pagesa/pagesa.dart`.
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -45,4 +50,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/katalogu.json
+    - assets/emrat.json

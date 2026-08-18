@@ -8,10 +8,10 @@
       "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
       "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
    ],
-   "emri" : "0.5.0 (5) — QR-i që shtypet dhe dërgohet",
+   "emri" : "0.6.0 (6) — blerja punon me të vërtetë",
    "gjendja" : "completed",
    "shenimet" : {
-      "en-US" : "The QR code can finally leave the screen.\n\nUntil now the screen said \"save the image and scan it from another device\" — because a phone cannot scan its own screen — but there was no button that saved it. Now there is: \"Save, print or send the QR code\".\n\nThe image comes out at 1024 pixels, large enough to print on paper. From the share sheet it goes to your printer, a second device, the gallery or Drive.\n\nNo ad is ever shown over the QR code.",
-      "sq" : "Kodi QR nxirret më në fund nga ekrani.\n\nDeri tani ekrani thoshte «ruaje figurën dhe skanoje nga pajisja tjetër» — sepse telefoni nuk e skanon dot ekranin e vet — po nuk kishte asnjë buton që e ruante. Tani ka: «Ruaj, shtyp ose dërgo kodin QR».\n\nFigura del 1024 piksele, e mjaftueshme edhe për shtyp mbi letër. Nga fleta e ndarjes e çon te shtypësi, te pajisja e dytë, te galeria ose te Drive-i.\n\nAsnjë reklamë nuk shfaqet mbi kodin QR."
+      "sq" : "Blerja punon më në fund.\n\nDeri tani çdo shtypje e çmimit kthente një gabim: aplikacioni nuk kishte fare hap pagese, ndaj porosia refuzohej gjithmonë. Tani pagesa hapet te PayPal-i dhe eSIM-i vjen menjëherë pas konfirmimit.\n\nEdhe lista e paketave ndryshoi: vjen drejt nga furnizuesi, me çmimet dhe vendet e vërteta — mbi 200 shtete në vend të 14.\n\nNëse pagesa kalon po profili vonon, te «Të miat» ka tani një buton që e rimerr pa paguar sërish.",
+      "en-US" : "Buying finally works.\n\nUntil now every tap on a price returned an error: the app had no payment step at all, so the order was always refused. Payment now opens at PayPal and the eSIM arrives right after you confirm.\n\nThe package list changed too: it comes straight from the supplier, with real prices and real countries — 200+ instead of 14.\n\nIf the payment goes through but the profile is late, «Mine» now has a button that fetches it again without paying twice."
    }
 }

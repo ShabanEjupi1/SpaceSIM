@@ -235,12 +235,30 @@ class KlientiAiralo {
   /// 🚨 Përgjigjja është **tri nivele** e thellë (shteti → operatori → paketat),
   /// jo një listë e sheshtë. Kodi i shtetit rri te niveli i parë; po ta lexoje
   /// nga paketa, do të dilte bosh dhe katalogu do të mbushej me shtete «».
-  Future<List<Paketa>> paketat({String lloji = 'local', int faqja = 1, int sa = 100}) async {
+  Future<List<Paketa>> paketat({String lloji = 'local', int faqja = 1, int sa = 100}) async =>
+      (await katalogu(lloji: lloji, faqja: faqja, sa: sa)).paketat;
+
+  /// Paketat **dhe** emrat e shteteve, në një kalim të vetëm.
+  ///
+  /// 🚨 Emrat duhen bashkë me paketat: relaja kthen mbi 200 shtete, kurse
+  /// përkthimet shqip te `assets/emrat.json` mbulojnë vetëm ato më të kërkuarat.
+  /// Pa `titujt`, çdo shtet i papërkthyer do të shfaqej te ekrani si kodi i tij
+  /// me dy shkronja — pra një listë kodesh, jo një dyqan.
+  Future<({List<Paketa> paketat, Map<String, String> titujt})> katalogu({
+    String lloji = 'local',
+    int faqja = 1,
+    int sa = 100,
+  }) async {
     final j = await _kerko('GET', '/v2/packages?filter[type]=$lloji&limit=$sa&page=$faqja');
     final dalja = <Paketa>[];
+    final titujt = <String, String>{};
     for (final shteti in (j['data'] as List? ?? const [])) {
       final s = (shteti as Map).cast<String, dynamic>();
       final kodi = (s['country_code'] as String? ?? '').toUpperCase();
+      final titulli = s['title'] as String?;
+      if (kodi.isNotEmpty && titulli != null && titulli.isNotEmpty) {
+        titujt[kodi] = titulli;
+      }
       for (final operatori in (s['operators'] as List? ?? const [])) {
         final o = (operatori as Map).cast<String, dynamic>();
         final rrjeti = o['title'] as String? ?? '';
@@ -251,7 +269,7 @@ class KlientiAiralo {
         }
       }
     }
-    return dalja;
+    return (paketat: dalja, titujt: titujt);
   }
 
   Paketa? _paketa(Map<String, dynamic> p, String kodiIShtetit, String rrjeti) {
@@ -346,11 +364,24 @@ class FurnizuesiAiralo implements Furnizuesi {
   bool get mundBlihet => true;
 
   @override
-  Future<Profili> blej(Paketa paketa, {required String porosiaId}) async {
+  Future<Profili> blej(Paketa paketa,
+      {required String porosiaId, String? kapja}) async {
+    // 🚨🚨 Pa `pagesa` relaja kthen 402, dhe blerësi lexon «Furnizuesi ktheu
+    // gabim (402)» — mesazh që tregon te Airalo për diçka që s'ka arritur kurrë
+    // atje. Kontrolli bëhet KËTU që gabimi të flasë shqip dhe të tregojë nga
+    // vërtet: te pagesa jonë, jo te furnizuesi i tyre.
+    if (kapja == null || kapja.isEmpty) {
+      throw const GabimFurnizuesi(
+        'Porosia u provua pa pagesë. Kjo është gabim i aplikacionit — '
+        'asnjë shumë nuk u mor.',
+        rikthyeshem: false,
+      );
+    }
     final j = await klienti._kerko('POST', '/v2/orders', forma: {
       'quantity': '1',
       'package_id': paketa.id,
       'type': 'sim',
+      'pagesa': kapja,
       // 🔑 Porosia jonë shkruhet PARA se të thirret furnizuesi, dhe id-ja e saj
       // dërgohet këtu: kështu një porosi e humbur gjendet te paneli i tyre pa
       // pasur nevojë t'u tregohet ora e saktë.

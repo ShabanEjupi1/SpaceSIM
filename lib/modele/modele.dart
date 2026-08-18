@@ -110,6 +110,7 @@ class Porosia {
     required this.gjendja,
     this.profili,
     this.gabimi,
+    this.kapja,
   });
 
   final String id;
@@ -121,7 +122,21 @@ class Porosia {
   final Profili? profili;
   final String? gabimi;
 
-  Porosia me({GjendjaEPorosise? gjendja, Profili? profili, String? gabimi}) =>
+  /// Identifikuesi i kapjes së pagesës te PayPal-i.
+  ///
+  /// 🚨🚨 Ruhet te pajisja me qëllim, dhe është fusha më e rëndësishme e këtij
+  /// modeli: ajo është **e vetmja provë** se blerësi ka paguar. Nëse furnizuesi
+  /// dështon pas pagesës, riprovimi bëhet me KËTË varg — relaja e njeh dhe kthen
+  /// të njëjtën porosi, pra profili vjen pa u paguar dy herë. Pa të, e vetmja
+  /// rrugë e mbetur do të ishte një pagesë e dytë.
+  final String? kapja;
+
+  Porosia me({
+    GjendjaEPorosise? gjendja,
+    Profili? profili,
+    String? gabimi,
+    String? kapja,
+  }) =>
       Porosia(
         id: id,
         paketaId: paketaId,
@@ -131,6 +146,7 @@ class Porosia {
         gjendja: gjendja ?? this.gjendja,
         profili: profili ?? this.profili,
         gabimi: gabimi ?? this.gabimi,
+        kapja: kapja ?? this.kapja,
       );
 
   Map<String, dynamic> teJson() => {
@@ -142,6 +158,7 @@ class Porosia {
         'gjendja': gjendja.name,
         if (profili != null) 'profili': profili!.teJson(),
         if (gabimi != null) 'gabimi': gabimi,
+        if (kapja != null) 'kapja': kapja,
       };
 
   factory Porosia.ngaJson(Map<String, dynamic> j) => Porosia(
@@ -158,6 +175,7 @@ class Porosia {
             ? null
             : Profili.ngaJson((j['profili'] as Map).cast<String, dynamic>()),
         gabimi: j['gabimi'] as String?,
+        kapja: j['kapja'] as String?,
       );
 }
 

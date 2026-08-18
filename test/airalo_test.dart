@@ -262,7 +262,7 @@ void main() {
           dite: 15,
           centa: 518,
           rrjetet: ['Vala']),
-      porosiaId: 'p-2026-0001',
+      porosiaId: 'p-2026-0001', kapja: 'KAPJA-PROVE',
     );
 
     expect(profili.lpa, startsWith('LPA:1\$'));
@@ -289,7 +289,7 @@ void main() {
             dite: 15,
             centa: 518,
             rrjetet: []),
-        porosiaId: 'p-1',
+        porosiaId: 'p-1', kapja: 'KAPJA-PROVE',
       ),
       throwsA(isA<GabimFurnizuesi>()
           .having((g) => g.rikthyeshem, 'rikthyeshem', isFalse)),
@@ -309,7 +309,7 @@ void main() {
       FurnizuesiAiralo(_klienti(r)).blej(
         const Paketa(
             id: 'x', kodiIShtetit: 'XK', gigabajt: 1, dite: 7, centa: 450, rrjetet: []),
-        porosiaId: 'p-1',
+        porosiaId: 'p-1', kapja: 'KAPJA-PROVE',
       ),
       throwsA(isA<GabimFurnizuesi>()),
     );
@@ -327,7 +327,7 @@ void main() {
         await FurnizuesiAiralo(_klienti(r)).blej(
           const Paketa(
               id: 'x', kodiIShtetit: 'XK', gigabajt: 1, dite: 7, centa: 450, rrjetet: []),
-          porosiaId: 'p-1',
+          porosiaId: 'p-1', kapja: 'KAPJA-PROVE',
         );
       } on GabimFurnizuesi catch (g) {
         return g;
@@ -351,7 +351,7 @@ void main() {
       FurnizuesiAiralo(_klienti(r)).blej(
         const Paketa(
             id: 'x', kodiIShtetit: 'XK', gigabajt: 1, dite: 7, centa: 450, rrjetet: []),
-        porosiaId: 'p-1',
+        porosiaId: 'p-1', kapja: 'KAPJA-PROVE',
       ),
       throwsA(isA<GabimFurnizuesi>()
           .having((g) => g.mesazhi, 'mesazhi', contains('900'))),

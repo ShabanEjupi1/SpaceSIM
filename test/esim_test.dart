@@ -224,7 +224,7 @@ void main() {
       // rri këtu sepse rikthimi do të ishte një rresht i vetëm te një JSON që
       // askush nuk e rilexon. Shih `lib/pamja/shenja_e_shtetit.dart`.
       final skedaret = [
-        File('assets/katalogu.json'),
+        File('assets/emrat.json'),
         ...Directory('lib').listSync(recursive: true).whereType<File>()
             .where((f) => f.path.endsWith('.dart')),
       ];
