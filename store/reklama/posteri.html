@@ -1,0 +1,138 @@
+<!doctype html>
+<meta charset="utf-8">
+<!--
+  📣 Posteri i murit për eSIM Space — A4 portret, 300 DPI (2480 × 3508 px).
+
+  🚨 Shabani, 18-08-2026: «need advertising for my esim app so that I print its
+  and add in walls for people to see and register my app and buy my packages».
+  Pra ky NUK është një banderolë rrjeti: ai shtypet, ngjitet te një mur, dhe
+  lexohet nga tre metra larg. Prandaj çdo vendim këtu është për letrën:
+
+  • Përmasat janë në PIKSELA, jo në mm, sepse vizatuesi është Chrome pa ekran
+    (`vizato.mjs`) dhe ai nuk di për DPI. 2480 × 3508 = A4 te 300 DPI.
+  • 🚨 `deviceScaleFactor` mbetet 1 gjithmonë — mbi 1 `captureScreenshot` kthen
+    një pamje 360×640 pa asnjë gabim ([[pamjet-chrome-pa-gpu-shkalla]]). Prandaj
+    madhësia e vërtetë shkruhet te CSS-ja, jo te shkalla.
+  • Titulli 168 px = ~14 mm i lartë: kufiri i poshtëm që lexohet nga 3 m.
+  • Kodi QR është 620 px = ~52 mm. Nën 40 mm një telefon i mesëm dështon te
+    drita e një korridori — dhe një QR që nuk skanohet e bën gjithë posterin të
+    kotë.
+
+  🕌 Asnjë qenie e gjallë, asnjë fytyrë, asnjë siluetë — vetëm gjeometri dhe
+  tipografi ([[workflow-pamja-pa-qenie-te-gjalla]]).
+
+  🔒 Emri i plotë nuk del: firma është «SpaceCode», jo mbiemri
+  ([[privatesia-emri-jashte-spacecode]]).
+-->
+<title>eSIM Space — posteri A4</title>
+<style>
+  @font-face { font-family: 'x'; src: local('DejaVu Sans'); }
+  :root {
+    --erret: #0a1020;
+    --blu:   #1f6feb;
+    --cian:  #35d0d8;
+    --letra: #ffffff;
+    --hiri:  #5b6478;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 2480px; height: 3508px; }
+  body {
+    font-family: 'DejaVu Sans', 'Liberation Sans', sans-serif;
+    background: var(--letra);
+    color: var(--erret);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Koka: brezi i errët që mban markën dhe premtimin. */
+  .koka {
+    background: linear-gradient(135deg, #0a1020 0%, #12224a 55%, #0d3b5c 100%);
+    color: #fff;
+    padding: 170px 170px 150px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Harku i globit — gjeometri, jo hartë: një hartë e vërtetë do të kërkonte
+     kufij, dhe kufijtë e një posteri janë pretendim politik që s'na duhet. */
+  .harku {
+    position: absolute; right: -420px; top: -260px;
+    width: 1500px; height: 1500px; border-radius: 50%;
+    border: 5px solid rgba(53, 208, 216, .30);
+  }
+  .harku.b { right: -300px; top: -140px; width: 1220px; height: 1220px;
+             border-color: rgba(53, 208, 216, .18); }
+  .marka { font-size: 92px; font-weight: 700; letter-spacing: 14px;
+           color: var(--cian); position: relative; }
+  h1 { font-size: 240px; line-height: .98; font-weight: 800;
+       margin-top: 52px; position: relative; }
+  h1 em { font-style: normal; color: var(--cian); }
+  .nen { font-size: 92px; line-height: 1.28; margin-top: 62px;
+         color: #c7d3e8; font-weight: 400; position: relative; max-width: 1750px; }
+
+  /* Trupi: tri arsye, secila një rresht — jo një paragraf. Nga tre metra
+     lexohet vetëm ajo që rri vetëm. */
+  .trupi { padding: 140px 170px 0; flex: 1; }
+  .arsye { display: flex; align-items: flex-start; gap: 62px; margin-bottom: 96px; }
+  .num { flex: 0 0 132px; height: 132px; border-radius: 34px;
+         background: var(--blu); color: #fff; font-size: 76px; font-weight: 700;
+         display: flex; align-items: center; justify-content: center; }
+  .arsye h2 { font-size: 96px; font-weight: 700; line-height: 1.08; }
+  .arsye p  { font-size: 66px; line-height: 1.34; color: var(--hiri); margin-top: 16px; }
+
+  /* Fundi: kodi QR dhe adresa. Kjo është e vetmja gjë që duhet vepruar. */
+  .fundi { display: flex; align-items: center; gap: 110px;
+           background: #f2f5fa; border-top: 10px solid var(--blu);
+           padding: 120px 170px; }
+  .qr { flex: 0 0 620px; }
+  .qr img { width: 620px; height: 620px; display: block;
+            image-rendering: pixelated; background: #fff; padding: 26px;
+            border: 4px solid #dbe3ef; }
+  .thirrja h3 { font-size: 118px; font-weight: 800; line-height: 1.06; }
+  .thirrja p  { font-size: 72px; color: var(--hiri); margin-top: 30px; line-height: 1.3; }
+  .adresa { font-size: 82px; font-weight: 700; color: var(--blu); margin-top: 42px; }
+  .vula { font-size: 46px; color: #8b94a7; margin-top: 46px; }
+</style>
+
+<div class="koka">
+  <div class="harku"></div><div class="harku b"></div>
+  <div class="marka">eSIM SPACE</div>
+  <h1>Internet<br><em>kudo</em> ku shkon.</h1>
+  <div class="nen">
+    Bli një eSIM për mbi <b>200 shtete</b> — pa kartelë, pa radhë,
+    pa kontratë. Kodi QR vjen brenda pak sekondash.
+  </div>
+</div>
+
+<div class="trupi">
+  <div class="arsye">
+    <div class="num">1</div>
+    <div>
+      <h2>Zgjidh shtetin dhe sa GB</h2>
+      <p>Çmimi që sheh është çmimi që paguan. Pa tarifa të fshehura.</p>
+    </div>
+  </div>
+  <div class="arsye">
+    <div class="num">2</div>
+    <div>
+      <h2>Paguaj me PayPal</h2>
+      <p>Kartela jote nuk kalon kurrë nëpër duart tona.</p>
+    </div>
+  </div>
+  <div class="arsye">
+    <div class="num">3</div>
+    <div>
+      <h2>Skano kodin dhe je online</h2>
+      <p>Kodi rri në telefon edhe pa internet — pikërisht atje ku të duhet.</p>
+    </div>
+  </div>
+</div>
+
+<div class="fundi">
+  <div class="qr"><img src="qr-play.png" alt=""></div>
+  <div class="thirrja">
+    <h3>Skano dhe shkarko</h3>
+    <p>Google Play · falas · shqip dhe anglisht</p>
+    <div class="adresa">esim.spacecode.tech</div>
+    <div class="vula">SpaceCode · Enisi Center SH.P.K. · Podujevë</div>
+  </div>
+</div>
