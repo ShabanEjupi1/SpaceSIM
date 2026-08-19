@@ -45,6 +45,12 @@ val keystoreProperties = Properties().apply {
     if (f.exists()) f.inputStream().use { load(it) }
 }
 
+// 🚨 Matet SKEDARI, jo vetëm vetia. Te Tokërrgjiku `storeFile=release.jks` tregonte
+// një skedar që NUK ekziston: vetia ishte e vendosur, kontrolli i vjetër kalonte, dhe
+// ndërtimi binte vetëm te hapi i nënshkrimit — pas 20 minutash nën qemu.
+val skedariICelesit = keystoreProperties.getProperty("storeFile")?.let { rootProject.file(it) }
+val kaCeles = skedariICelesit?.exists() == true
+
 android {
     namespace = "tech.spacecode.esim"
     compileSdk = 36
@@ -75,8 +81,8 @@ android {
 
     signingConfigs {
         create("release") {
-            if (keystoreProperties.getProperty("storeFile") != null) {
-                storeFile = file(keystoreProperties.getProperty("storeFile"))
+            if (kaCeles) {
+                storeFile = skedariICelesit
                 storePassword = keystoreProperties.getProperty("storePassword")
                 keyAlias = keystoreProperties.getProperty("keyAlias")
                 keyPassword = keystoreProperties.getProperty("keyPassword")
@@ -89,7 +95,7 @@ android {
             // Pa `key.properties` bie prapa te çelësi i debug-ut, që e mban
             // `flutter run --release` të punueshëm lokalisht — por një AAB i
             // tillë refuzohet nga Play Console.
-            signingConfig = if (keystoreProperties.getProperty("storeFile") != null) {
+            signingConfig = if (kaCeles) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
@@ -106,4 +112,32 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// ═══ ROJA E NËNSHKRIMIT ═══════════════════════════════════════════════════════
+// 🚨🚨 Rënia prapa te çelësi i DEBUG-ut mbetet me qëllim, që `flutter run --release`
+// të punojë pa çelës. Por rruga drejt Play-it është `bundle*Release`, dhe AJO ndalet
+// — brenda 5 sekondash te konfigurimi, jo pas 20 minutash te hapi i ngarkimit.
+//
+// 🔑 Lexohen emrat e detyrave të kërkuara, jo grafiku i tyre: `startParameter` është
+// API e qëndrueshme te çdo version i Gradle-s, kurse forma e `taskGraph.whenReady`
+// ka ndryshuar mes versioneve të Kotlin DSL-së.
+run {
+    val emrat = gradle.startParameter.taskNames
+    val kerkonAab = emrat.any { it.contains("bundle", true) && it.contains("Release") }
+    val kerkonApk = emrat.any { it.contains("assemble", true) && it.contains("Release") }
+    if (!kaCeles && (kerkonAab || kerkonApk)) {
+        val mesazhi = """
+            ⛔ Nënshkrimi do të binte prapa te çelësi i DEBUG-ut.
+               pritej          : ${rootProject.file("key.properties")}
+               storeFile tregon: ${skedariICelesit ?: "(vetia mungon)"}
+               kura            : krijo `android/key.properties` me shteg ABSOLUT —
+                 storeFile=/mnt/data/workspace/spacecode-brain/keys/esim-upload.jks
+                 storePassword=… · keyAlias=esim · keyPassword=…
+                 (fjalëkalimet: §12 te credentials.local.txt)
+        """.trimIndent()
+        if (kerkonAab) throw GradleException(mesazhi)
+        logger.warn(mesazhi)
+        logger.warn("⚠️  APK-ja e lëshimit vazhdon me çelësin e debug-ut — kurrë për Play.")
+    }
 }
