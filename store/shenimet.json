@@ -1,17 +1,17 @@
 {
-   "_koment" : [
-      "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
-      "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
-      "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
-      "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
-      "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
-      "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
-      "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
-   ],
-   "emri" : "0.6.0 (6) — blerja punon me të vërtetë",
-   "gjendja" : "completed",
-   "shenimet" : {
-      "sq" : "Blerja punon më në fund.\n\nDeri tani çdo shtypje e çmimit kthente një gabim: aplikacioni nuk kishte fare hap pagese, ndaj porosia refuzohej gjithmonë. Tani pagesa hapet te PayPal-i dhe eSIM-i vjen menjëherë pas konfirmimit.\n\nEdhe lista e paketave ndryshoi: vjen drejt nga furnizuesi, me çmimet dhe vendet e vërteta — mbi 200 shtete në vend të 14.\n\nNëse pagesa kalon po profili vonon, te «Të miat» ka tani një buton që e rimerr pa paguar sërish.",
-      "en-US" : "Buying finally works.\n\nUntil now every tap on a price returned an error: the app had no payment step at all, so the order was always refused. Payment now opens at PayPal and the eSIM arrives right after you confirm.\n\nThe package list changed too: it comes straight from the supplier, with real prices and real countries — 200+ instead of 14.\n\nIf the payment goes through but the profile is late, «Mine» now has a button that fetches it again without paying twice."
-   }
+  "_koment": [
+    "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
+    "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
+    "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
+    "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
+    "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
+    "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
+    "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
+  ],
+  "emri": "0.6.1 (7) — reklamat shfaqen përsëri",
+  "gjendja": "completed",
+  "shenimet": {
+    "sq": "U rregullua: reklamat nuk shfaqeshin fare dhe hapësira mbetej bosh.\n\nBlerja, lista e paketave dhe profilet mbeten si te lëshimi i kaluar.",
+    "en-US": "Fixed: ads were not showing at all and the space stayed blank.\n\nBuying, the package list and the profiles stay as in the previous release."
+  }
 }

@@ -27,7 +27,7 @@
              gabim — jep zero mbushje, që zbulohet vetëm javë më vonë. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1776059573171352~8254149674"/>
+            android:value="ca-app-pub-8491001524308476~5982113044"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -62,16 +62,16 @@ class Ads {
   /// `~4045126137`, Shah Mat `~3928973421`, Tokërrgjik `~3673667026`. Ai i
   /// eSIM-it rri te `AndroidManifest.xml`. Një identifikues i huaj nuk jep
   /// gabim — jep zero mbushje, që zbulohet vetëm javë më vonë te raportet.
-  static const String _bannerLive = 'ca-app-pub-1776059573171352/7364308051';
-  static const String _interstitialLive = 'ca-app-pub-1776059573171352/1552030019';
+  static const String _bannerLive = 'ca-app-pub-8491001524308476/4711645435';
+  static const String _interstitialLive = 'ca-app-pub-8491001524308476/9370588516';
 
   // Të krijuara te AdMob-i por të PAPËRDORURA me qëllim. Rrinë të shënuara që
   // të mos rikrijohen, dhe që një njësi me zero kërkesa te konsola të ketë
   // shpjegim:
-  //   rewarded           ca-app-pub-1776059573171352/5324734008
-  //   rewarded interst.  ca-app-pub-1776059573171352/5212787437
-  //   native advanced    ca-app-pub-1776059573171352/4011652336
-  //   app open           ca-app-pub-1776059573171352/6038069934
+  //   rewarded           ca-app-pub-8491001524308476/8368603230
+  //   rewarded interst.  ca-app-pub-8491001524308476/8201082277
+  //   native advanced    ca-app-pub-8491001524308476/9234857146
+  //   app open           ca-app-pub-8491001524308476/7921775474
   //
   // 🔑 Reklama me shpërblim mungon me QËLLIM: te një lojë shpërblimi është një
   // ndihmë, pra diçka që aplikacioni e ka dhe e jep. Këtu nuk ka asgjë të tillë
