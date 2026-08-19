@@ -34,6 +34,7 @@ import 'dart:convert';
 
 import '../furnizuesi/airalo.dart' show PergjigjeHttp, Transporti;
 import '../modele/modele.dart';
+import 'partneri.dart';
 
 /// Dështim i pagesës — i NDARË nga [GabimFurnizuesi] me qëllim.
 ///
@@ -119,7 +120,14 @@ class PagesaPermesReleje implements Pagesa {
       'POST',
       Uri.parse('$bazaUrl/pagesa/nis'),
       kokat: _kokat,
-      forma: {'package_id': paketa.id},
+      // 🔑 Kodi i partnerit shkon te NISJA e pagesës, jo te porosia: relaja e
+      // lidh me pagesën para se të ekzistojë ndonjë para, ndaj një klient nuk
+      // mund t'ia ngjisë një shitje të kryer një kodi tjetër. Shih
+      // `linux-install/esim-rele/partneret.mjs`.
+      forma: {
+        'package_id': paketa.id,
+        if (Partneri.kodi != null) 'partneri': Partneri.kodi!,
+      },
     );
     if (!p.eMire) throw GabimPagese(_mesazhi(p) ?? 'Pagesa nuk u nis (${p.kodi}).');
     final j = p.json;

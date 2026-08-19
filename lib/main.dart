@@ -15,6 +15,7 @@ import 'furnizuesi/airalo.dart';
 import 'furnizuesi/furnizuesi.dart';
 import 'furnizuesi/transporti_http.dart';
 import 'pagesa/pagesa.dart';
+import 'pagesa/partneri.dart';
 import 'pamja/faqja_kryesore.dart';
 import 'te_dhena/katalogu.dart';
 import 'te_dhena/ruajtja.dart';
@@ -52,6 +53,10 @@ Future<void> main() async {
   // për të parë kodin e vet QR. Shih `lib/app/ads.dart`.
   // Matja nis PARA reklamave: një hapje që dështon te formulari i pëlqimit
   // duhet numëruar prapë, përndryshe humbasin pikërisht hapjet problematike.
+  // 🚨 PARA `runApp`: pagesa e parë mund të nisë brenda sekondave, dhe një kod
+  // partneri i lexuar pas saj do të vinte shumë vonë — komisioni do të humbte
+  // pa asnjë gabim. Shih `pagesa/partneri.dart`.
+  await Partneri.nis(ruajtja.prefs, Uri.base);
   unawaited(Analitika.nis());
   unawaited(Ads.start());
   runApp(SpaceSim(
