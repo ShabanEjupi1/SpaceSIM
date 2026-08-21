@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'app/ads.dart';
 import 'app/analitika.dart';
+import 'app/vleresimi.dart';
 import 'furnizuesi/airalo.dart';
 import 'furnizuesi/furnizuesi.dart';
 import 'furnizuesi/transporti_http.dart';
@@ -58,6 +59,8 @@ Future<void> main() async {
   // pa asnjë gabim. Shih `pagesa/partneri.dart`.
   await Partneri.nis(ruajtja.prefs, Uri.base);
   unawaited(Analitika.nis());
+  // 🔎 Vetëm numëruesi i hapjeve; kërkesa vjen pas një porosie të dorëzuar.
+  unawaited(Vleresimi.nis(versioni: '0.6.1+7'));
   unawaited(Ads.start());
   runApp(SpaceSim(
     katalogu: katalogu,

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../furnizuesi/furnizuesi.dart';
 import '../modele/modele.dart';
+import '../app/vleresimi.dart';
 import '../pagesa/pagesa.dart';
 import '../te_dhena/katalogu.dart';
 import '../te_dhena/ruajtja.dart';
@@ -150,6 +151,11 @@ class _FaqjaPaketaveState extends State<FaqjaPaketave> {
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => FaqjaProfilit(porosia: porosia, katalogu: widget.katalogu),
       ));
+      // 🔎 Momenti i mirë: eSIM-i u dorëzua dhe blerësi e pa profilin e vet.
+      // Thirret PAS kthimit nga ajo faqe, kurrë para saj — dy dritare mbi
+      // njëra-tjetrën e mbyllin njërën pa e parë askush, dhe kuota e Play-it
+      // shpenzohet gjithsesi. Shih app/vleresimi.dart.
+      await Vleresimi.momentiMire();
     } on GabimFurnizuesi catch (e) {
       porosia = porosia.me(gjendja: GjendjaEPorosise.deshtoi, gabimi: e.mesazhi);
       await widget.ruajtja.perditeso(porosia);

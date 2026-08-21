@@ -41,6 +41,9 @@ dependencies:
   # WebView-je bllokohet, sepse aplikacioni do të mund ta lexonte fjalëkalimin.
   # Shih `lib/pagesa/pagesa.dart`.
   url_launcher: ^6.3.1
+  # 🔎 Vlerësimi te Google Play — In-App Review API. Të gjitha rregullat
+  # (kur pyetet, sa shpesh, dhe pse asnjë shpërblim) rrinë te vleresimi.dart.
+  in_app_review: ^2.0.10
 
 dev_dependencies:
   flutter_test:
