@@ -1,17 +1,17 @@
 {
-  "_koment": [
-    "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
-    "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
-    "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
-    "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
-    "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
-    "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
-    "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
-  ],
-  "emri": "0.6.1 (7) — reklamat shfaqen përsëri",
-  "gjendja": "completed",
-  "shenimet": {
-    "sq": "U rregullua: reklamat nuk shfaqeshin fare dhe hapësira mbetej bosh.\n\nBlerja, lista e paketave dhe profilet mbeten si te lëshimi i kaluar.",
-    "en-US": "Fixed: ads were not showing at all and the space stayed blank.\n\nBuying, the package list and the profiles stay as in the previous release."
-  }
+   "_koment" : [
+      "Emri i lëshimit dhe shënimet për çdo gjuhë, të lexuara nga store/tools/play.mjs.",
+      "🚨 Emri NUK u shfaqet përdoruesve — vetëm ty te Console-i. Max 50 shkronja.",
+      "🚨 Shënimet i shohin përdoruesit: max 500 SHKRONJA për gjuhë, dhe vetëm gjuhët",
+      "   që ekzistojnë te listimi (sq dhe en-US). Një gjuhë e panjohur e rrëzon :commit-in.",
+      "🚨 MOS e redakto me perl/sed pa `-CSD`: një kalim pa të e shkruan tekstin dy herë",
+      "   të koduar (ë → Ã«), JSON-i mbetet i vlefshëm, dhe gabimi duket vetëm te Console-i.",
+      "🚨 `gjendja` = 'draft' sa kohë aplikacioni s'është botuar; 'completed' pas botimit."
+   ],
+   "emri" : "0.7.0 (8) — vlerëso aplikacionin",
+   "gjendja" : "completed",
+   "shenimet" : {
+      "en-US" : "• After an eSIM is delivered, the app asks once whether you would like to rate it — never more than once per version.\n• The prompt comes after you have seen your eSIM profile, never on top of it.\n• Nothing is given in return for a rating.",
+      "sq" : "• Pas një porosie të dorëzuar, aplikacioni të pyet një herë nëse do ta vlerësosh — jo më shpesh se një herë për version.\n• Pyetja vjen pasi e ke parë profilin e eSIM-it tënd, kurrë mbi të.\n• Asnjë shpërblim nuk jepet për vlerësim."
+   }
 }

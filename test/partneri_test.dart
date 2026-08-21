@@ -1,4 +1,12 @@
 /// Provat e kodit të partnerit — pika ku një komision mund të humbasë pa zë.
+///
+/// 🚨 `library;` NUK është zbukurim: pa të ky koment varet mbi `import`-in e
+/// parë dhe analizuesi e raporton si `dangling_library_doc_comments`. Duket si
+/// një «info» e padëmshme — dhe pikërisht ajo e ndaloi ndërtimin e lëshimit të
+/// eSIM-it më 21-08-2026, sepse `ndert-dhe-boto.sh` e ndal zinxhirin te ÇDO
+/// gjetje e analizës. Një rresht i vetëm, dhe aplikacioni nuk u ngjit fare.
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:esim/pagesa/partneri.dart';

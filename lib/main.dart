@@ -60,7 +60,7 @@ Future<void> main() async {
   await Partneri.nis(ruajtja.prefs, Uri.base);
   unawaited(Analitika.nis());
   // 🔎 Vetëm numëruesi i hapjeve; kërkesa vjen pas një porosie të dorëzuar.
-  unawaited(Vleresimi.nis(versioni: '0.6.1+7'));
+  unawaited(Vleresimi.nis(versioni: '0.7.0+8'));
   unawaited(Ads.start());
   runApp(SpaceSim(
     katalogu: katalogu,
